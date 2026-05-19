@@ -49,7 +49,7 @@ const context = {
   Map,
   Promise,
   location: { hostname: "kjisback.github.io" },
-  window: { devicePixelRatio: 1, addEventListener() {} },
+  window: { MOMENTUM_API_BASE: "https://momentum-trading-ml-api.onrender.com", devicePixelRatio: 1, addEventListener() {} },
   document: {
     getElementById: node,
     querySelector: () => node("query"),

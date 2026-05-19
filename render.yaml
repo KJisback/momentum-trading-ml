@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: momentum-trading-ml-api
+    runtime: python
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: uvicorn src.saas_app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ALLOWED_ORIGINS
+        value: https://kjisback.github.io,http://127.0.0.1:8010,http://127.0.0.1:8011,http://localhost:8010,http://localhost:8011

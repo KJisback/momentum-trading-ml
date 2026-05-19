@@ -123,18 +123,32 @@ Useful API endpoints:
 Custom watchlists:
 
 - Local/backend mode supports live yfinance runs from the dashboard.
-- GitHub Pages is static, so it shows the default precomputed dashboard and disables live custom runs.
-- To make custom ticker selection public, deploy the FastAPI backend on a host such as Render, Railway, Fly, AWS, or another Python web host, then point the frontend at that backend.
+- GitHub Pages is static, so live runs call the deployed FastAPI backend configured in `web/config.js`.
+- If the backend is asleep or unavailable, the static page still shows the default precomputed dashboard.
+- The default backend target is `https://momentum-trading-ml-api.onrender.com`.
 
 ## Public Deployment
 
-The public dashboard is exported to `docs/` and deployed through GitHub Pages.
+The public dashboard is exported to `docs/` and deployed through GitHub Pages. The live yfinance API is deployed as a Render web service.
 
 Refresh the static build before publishing:
 
 ```powershell
 py -3.11 export_static_site.py
 ```
+
+Render backend settings:
+
+```text
+Service name: momentum-trading-ml-api
+Build command: pip install --upgrade pip && pip install -r requirements.txt
+Start command: uvicorn src.saas_app:app --host 0.0.0.0 --port $PORT
+Health check: /api/health
+```
+
+The same settings are captured in `render.yaml`.
+
+See `DEPLOYMENT.md` for the backend and frontend smoke-test checklist.
 
 Expected public URL:
 

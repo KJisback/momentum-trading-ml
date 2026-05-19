@@ -31,6 +31,7 @@ if __name__ == "__main__":
     DATA_DIR.mkdir(exist_ok=True)
 
     copy_asset("index.html")
+    copy_asset("config.js")
     copy_asset("styles.css")
     copy_asset("app.js")
 

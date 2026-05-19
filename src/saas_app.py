@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import re
 
 import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -20,11 +22,31 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 WEB_DIR = PROJECT_ROOT / "web"
 TICKER_PATTERN = re.compile(r"^[A-Z0-9][A-Z0-9.\-]{0,9}$")
+DEFAULT_ALLOWED_ORIGINS = [
+    "https://kjisback.github.io",
+    "http://127.0.0.1:8010",
+    "http://127.0.0.1:8011",
+    "http://localhost:8010",
+    "http://localhost:8011",
+]
+
+
+def allowed_origins() -> list[str]:
+    raw = os.getenv("ALLOWED_ORIGINS")
+    if not raw:
+        return DEFAULT_ALLOWED_ORIGINS
+    return [origin.strip().rstrip("/") for origin in raw.split(",") if origin.strip()]
 
 app = FastAPI(
     title="Momentum Strategy Dashboard",
     version="1.1.0",
     description="Human-readable dashboard API for the momentum strategy.",
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins(),
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
 app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
 app.mount("/data", StaticFiles(directory=PROJECT_ROOT / "docs" / "data", check_dir=False), name="data")
@@ -297,6 +319,7 @@ def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
 def index() -> HTMLResponse:
     html = (WEB_DIR / "index.html").read_text(encoding="utf-8")
     html = html.replace('href="styles.css"', 'href="/static/styles.css"')
+    html = html.replace('src="config.js"', 'src="/static/config.js"')
     html = html.replace('src="app.js"', 'src="/static/app.js"')
     return HTMLResponse(html)
 

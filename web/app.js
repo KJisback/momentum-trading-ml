@@ -12,6 +12,7 @@ const page = {
 };
 
 const runningStatic = !["127.0.0.1", "localhost"].includes(location.hostname);
+const apiBase = String(window.MOMENTUM_API_BASE || "").replace(/\/$/, "");
 const apiFiles = {
   "/api/health": "data/health.json",
   "/api/summary": "data/summary.json",
@@ -33,7 +34,7 @@ const chartBook = {
 };
 
 async function getJson(url) {
-  const reply = await fetch(runningStatic ? apiFiles[url] : url);
+  const reply = await fetch(runningStatic ? apiFiles[url] : `${apiBase}${url}`);
   if (!reply.ok) throw new Error(`Request failed: ${url}`);
   return reply.json();
 }
@@ -104,13 +105,13 @@ function wireWatchlistBuilder() {
 function wireCustomRun() {
   wireWatchlistBuilder();
   const button = $("runCustomButton");
-  if (runningStatic) {
+  if (runningStatic && !apiBase) {
     button.disabled = true;
     setCustomNote("Live yfinance runs need the FastAPI backend. Clone the repo or deploy the backend to enable custom watchlists.", "error");
     return;
   }
   button.onclick = runCustomUniverse;
-  setCustomNote("Backend connected. Edit tickers, choose a model, then run a custom watchlist.", "ready");
+  setCustomNote(apiBase ? "Live backend connected. Edit tickers, choose a model, then run a custom watchlist." : "Backend connected. Edit tickers, choose a model, then run a custom watchlist.", "ready");
 }
 
 async function runCustomUniverse() {
@@ -124,7 +125,7 @@ async function runCustomUniverse() {
   button.disabled = true;
   setCustomNote("Downloading daily data from Yahoo Finance and recalculating the strategy...", "ready");
   try {
-    const reply = await fetch("/api/custom-run", {
+    const reply = await fetch(`${apiBase}/api/custom-run`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

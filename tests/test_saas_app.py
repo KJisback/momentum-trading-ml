@@ -18,6 +18,19 @@ def test_health_endpoint_reports_output_files():
     assert "files" in payload
 
 
+def test_cors_allows_github_pages_origin():
+    response = client.options(
+        "/api/custom-run",
+        headers={
+            "Origin": "https://kjisback.github.io",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+
+    assert response.status_code == 200
+    assert response.headers["access-control-allow-origin"] == "https://kjisback.github.io"
+
+
 def test_summary_endpoint_is_human_readable_when_outputs_exist():
     response = client.get("/api/summary")
 
