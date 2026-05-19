@@ -118,6 +118,13 @@ Useful API endpoints:
 - `GET /api/equity`
 - `GET /api/predictions`
 - `GET /api/downloads/weekly_stock_predictions.csv`
+- `POST /api/custom-run`
+
+Custom watchlists:
+
+- Local/backend mode supports live yfinance runs from the dashboard.
+- GitHub Pages is static, so it shows the default precomputed dashboard and disables live custom runs.
+- To make custom ticker selection public, deploy the FastAPI backend on a host such as Render, Railway, Fly, AWS, or another Python web host, then point the frontend at that backend.
 
 ## Public Deployment
 

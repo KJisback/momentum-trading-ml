@@ -99,7 +99,8 @@ def download_daily_data(
 
     Yahoo uses BRK-B instead of BRK.B, so symbols are normalized after download.
     """
-    yf_tickers = [to_yfinance_ticker(ticker) for ticker in tickers]
+    ticker_list = list(tickers)
+    yf_tickers = [to_yfinance_ticker(ticker) for ticker in ticker_list]
     data = yf.download(
         yf_tickers,
         start=start,
@@ -111,15 +112,38 @@ def download_daily_data(
     )
 
     frames: list[pd.DataFrame] = []
+    missing_tickers: list[str] = []
     if isinstance(data.columns, pd.MultiIndex):
-        for yf_ticker in yf_tickers:
+        available = set(data.columns.get_level_values(0))
+        for requested_ticker, yf_ticker in zip(ticker_list, yf_tickers):
+            if yf_ticker not in available:
+                missing_tickers.append(requested_ticker)
+                continue
             stock = data[yf_ticker].copy()
-            stock["ticker"] = from_yfinance_ticker(yf_ticker)
+            if "Close" not in stock.columns:
+                missing_tickers.append(requested_ticker)
+                continue
+            stock = stock.dropna(subset=["Close"])
+            if stock.empty:
+                missing_tickers.append(requested_ticker)
+                continue
+            stock["ticker"] = requested_ticker
             frames.append(stock.reset_index())
     else:
         stock = data.copy()
-        stock["ticker"] = from_yfinance_ticker(yf_tickers[0])
-        frames.append(stock.reset_index())
+        if "Close" not in stock.columns:
+            missing_tickers.append(ticker_list[0])
+        else:
+            stock = stock.dropna(subset=["Close"])
+            if stock.empty:
+                missing_tickers.append(ticker_list[0])
+            else:
+                stock["ticker"] = ticker_list[0]
+                frames.append(stock.reset_index())
+
+    if missing_tickers:
+        joined = ", ".join(missing_tickers)
+        raise ValueError(f"Yahoo Finance returned no usable price data for: {joined}.")
 
     daily = pd.concat(frames, ignore_index=True)
     daily.columns = [str(col).lower().replace(" ", "_") for col in daily.columns]

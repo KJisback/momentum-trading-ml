@@ -3,24 +3,41 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
+
+from src.momentum_strategy import StrategyConfig, run_pipeline
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 WEB_DIR = PROJECT_ROOT / "web"
+TICKER_PATTERN = re.compile(r"^[A-Z0-9][A-Z0-9.\-]{0,9}$")
 
 app = FastAPI(
     title="Momentum Strategy Dashboard",
-    version="1.0.0",
-    description="Human-readable dashboard API for the ML momentum strategy.",
+    version="1.1.0",
+    description="Human-readable dashboard API for the momentum strategy.",
 )
 app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
 app.mount("/data", StaticFiles(directory=PROJECT_ROOT / "docs" / "data", check_dir=False), name="data")
+
+
+class CustomRunRequest(BaseModel):
+    tickers: list[str] = Field(..., min_length=3, max_length=25)
+    topN: int = Field(default=2, ge=1, le=10)
+    modelType: str = "random_forest"
+    entryCost: float = Field(default=0.001, ge=0, le=0.05)
+    exitCost: float = Field(default=0.001, ge=0, le=0.05)
+    start: str = "2017-01-01"
+    end: str = "2026-01-01"
+    trainEnd: str = "2022-12-31"
+    testStart: str = "2023-01-01"
 
 
 def read_output_csv(name: str) -> pd.DataFrame:
@@ -38,30 +55,27 @@ def rounded(value: float, digits: int = 2) -> float:
     return round(float(value), digits)
 
 
-@app.get("/")
-def index() -> FileResponse:
-    return FileResponse(WEB_DIR / "index.html")
+def clean_tickers(raw_tickers: list[str]) -> list[str]:
+    tickers = []
+    for ticker in raw_tickers:
+        cleaned = ticker.strip().upper()
+        if not cleaned:
+            continue
+        if not TICKER_PATTERN.match(cleaned):
+            raise HTTPException(status_code=422, detail=f"Invalid ticker: {ticker}")
+        if cleaned not in tickers:
+            tickers.append(cleaned)
+    if len(tickers) < 3:
+        raise HTTPException(status_code=422, detail="Choose at least 3 unique tickers.")
+    return tickers
 
 
-@app.get("/api/health")
-def health() -> dict:
-    required = [
-        "performance_metrics.csv",
-        "weekly_stock_predictions.csv",
-        "weekly_portfolio_returns.csv",
-        "weekly_features.csv",
-    ]
-    files = {name: (OUTPUT_DIR / name).exists() for name in required}
-    return {"status": "ok" if all(files.values()) else "missing_outputs", "files": files}
-
-
-@app.get("/api/summary")
-def summary() -> dict:
-    performance = read_output_csv("performance_metrics.csv")
-    weekly = read_output_csv("weekly_portfolio_returns.csv")
-    predictions = read_output_csv("weekly_stock_predictions.csv")
-    features = read_output_csv("weekly_features.csv")
-
+def build_summary_payload(
+    performance: pd.DataFrame,
+    weekly: pd.DataFrame,
+    predictions: pd.DataFrame,
+    features: pd.DataFrame,
+) -> dict:
     before = performance.loc[performance["basis"] == "before_costs"].iloc[0]
     after = performance.loc[performance["basis"] == "after_costs"].iloc[0]
     latest_week = weekly.sort_values("week").iloc[-1]
@@ -138,10 +152,8 @@ def summary() -> dict:
     }
 
 
-@app.get("/api/equity")
-def equity() -> dict:
-    weekly = read_output_csv("weekly_portfolio_returns.csv").sort_values("week")
-    weekly = weekly.copy()
+def build_equity_payload(weekly: pd.DataFrame) -> dict:
+    weekly = weekly.sort_values("week").copy()
     weekly["gross_drawdown"] = weekly["gross_equity"] / weekly["gross_equity"].cummax() - 1
     weekly["net_drawdown"] = weekly["net_equity"] / weekly["net_equity"].cummax() - 1
     weekly["rolling_net_return_4w"] = weekly["net_return"].rolling(4, min_periods=1).mean()
@@ -168,9 +180,8 @@ def equity() -> dict:
     }
 
 
-@app.get("/api/predictions")
-def predictions(limit: int = 60) -> dict:
-    rows = read_output_csv("weekly_stock_predictions.csv").sort_values(["week", "rank"], ascending=[False, True])
+def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
+    rows = rows.sort_values(["week", "rank"], ascending=[False, True])
     rows = rows.head(max(1, min(limit, 500)))
     return {
         "rows": [
@@ -185,6 +196,80 @@ def predictions(limit: int = 60) -> dict:
             }
             for _, row in rows.iterrows()
         ]
+    }
+
+
+@app.get("/")
+def index() -> FileResponse:
+    return FileResponse(WEB_DIR / "index.html")
+
+
+@app.get("/api/health")
+def health() -> dict:
+    required = [
+        "performance_metrics.csv",
+        "weekly_stock_predictions.csv",
+        "weekly_portfolio_returns.csv",
+        "weekly_features.csv",
+    ]
+    files = {name: (OUTPUT_DIR / name).exists() for name in required}
+    return {"status": "ok" if all(files.values()) else "missing_outputs", "files": files}
+
+
+@app.get("/api/summary")
+def summary() -> dict:
+    return build_summary_payload(
+        read_output_csv("performance_metrics.csv"),
+        read_output_csv("weekly_portfolio_returns.csv"),
+        read_output_csv("weekly_stock_predictions.csv"),
+        read_output_csv("weekly_features.csv"),
+    )
+
+
+@app.get("/api/equity")
+def equity() -> dict:
+    return build_equity_payload(read_output_csv("weekly_portfolio_returns.csv"))
+
+
+@app.get("/api/predictions")
+def predictions(limit: int = 60) -> dict:
+    return build_predictions_payload(read_output_csv("weekly_stock_predictions.csv"), limit)
+
+
+@app.post("/api/custom-run")
+def custom_run(request: CustomRunRequest) -> dict:
+    tickers = clean_tickers(request.tickers)
+    if request.topN > len(tickers):
+        raise HTTPException(status_code=422, detail="topN cannot exceed the number of tickers.")
+
+    config = StrategyConfig(
+        start=request.start,
+        end=request.end,
+        train_end=request.trainEnd,
+        test_start=request.testStart,
+        top_n=request.topN,
+        entry_cost=request.entryCost,
+        exit_cost=request.exitCost,
+        model_type=request.modelType,
+    )
+    try:
+        result = run_pipeline(output_dir=OUTPUT_DIR / "custom_preview", config=config, tickers=tickers)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    return {
+        "tickers": tickers,
+        "summary": build_summary_payload(
+            result["performance"],
+            result["weekly_returns"],
+            result["predictions"],
+            result["weekly_dataset"],
+        ),
+        "equity": build_equity_payload(result["weekly_returns"]),
+        "predictions": build_predictions_payload(result["predictions"], 120),
+        "modelMetrics": result["model_metrics"],
     }
 
 

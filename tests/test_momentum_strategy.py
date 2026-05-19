@@ -8,6 +8,7 @@ from src.momentum_strategy import (
     backtest_portfolio,
     build_weekly_dataset,
     construct_portfolio,
+    download_daily_data,
     performance_metrics,
     train_predict,
     validate_config,
@@ -86,3 +87,20 @@ def test_performance_metrics_handles_empty_returns():
 
     assert np.isnan(metrics["cumulative_return"])
     assert np.isnan(metrics["sharpe_ratio"])
+
+
+def test_download_daily_data_reports_missing_yahoo_symbols(monkeypatch):
+    dates = pd.bdate_range("2024-01-01", periods=3)
+    columns = pd.MultiIndex.from_product(
+        [["AAPL"], ["Open", "High", "Low", "Close", "Volume"]],
+    )
+    data = pd.DataFrame(
+        [[100, 101, 99, 100.5, 1_000_000]] * len(dates),
+        index=dates,
+        columns=columns,
+    )
+
+    monkeypatch.setattr("src.momentum_strategy.yf.download", lambda *args, **kwargs: data)
+
+    with pytest.raises(ValueError, match="BAD"):
+        download_daily_data(["AAPL", "BAD"], "2024-01-01", "2024-02-01")

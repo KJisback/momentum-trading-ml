@@ -17,6 +17,42 @@
     </header>
 
     <main>
+      <section class="custom-panel">
+        <div>
+          <p class="eyebrow">Custom universe</p>
+          <h2>Run the strategy on your own tickers</h2>
+          <p class="custom-note" id="customNote">Live custom runs need the Python backend. The public static page shows the default precomputed universe.</p>
+        </div>
+        <div class="custom-controls">
+          <div class="ticker-builder">
+            <label for="tickerInput">Add ticker</label>
+            <div class="ticker-add-row">
+              <input id="tickerInput" placeholder="AAPL or BRK.B" autocomplete="off" />
+              <button id="addTickerButton" class="secondary-button" type="button">Add</button>
+            </div>
+            <div class="starter-row" aria-label="Starter tickers">
+              <button type="button" data-starter="NVDA">NVDA</button>
+              <button type="button" data-starter="NFLX">NFLX</button>
+              <button type="button" data-starter="SPY">SPY</button>
+              <button type="button" data-starter="QQQ">QQQ</button>
+            </div>
+            <div class="watchlist-chips" id="watchlistChips"></div>
+          </div>
+          <label>
+            Top N
+            <input id="topNInput" type="number" min="1" max="10" value="2" />
+          </label>
+          <label>
+            Model
+            <select id="modelInput">
+              <option value="random_forest">Random Forest</option>
+              <option value="hist_gradient_boosting">Gradient Boosting</option>
+            </select>
+          </label>
+          <button id="runCustomButton" type="button">Run custom watchlist</button>
+        </div>
+      </section>
+
       <section class="summary-band">
         <div>
           <span class="label">After-cost cumulative return</span>

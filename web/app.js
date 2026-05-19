@@ -1,4 +1,5 @@
 const dollars = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
+const defaultWatchlist = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "JPM", "V", "JNJ", "BRK.B"];
 
 const page = {
   chartRows: [],
@@ -7,6 +8,7 @@ const page = {
   chart: "equity",
   range: "all",
   hover: null,
+  watchlist: [...defaultWatchlist],
 };
 
 const runningStatic = !["127.0.0.1", "localhost"].includes(location.hostname);
@@ -39,6 +41,110 @@ function setDownloadLinks() {
   document.querySelectorAll("[data-download]").forEach((link) => {
     if (runningStatic) link.href = `downloads/${link.dataset.download}`;
   });
+}
+
+function setCustomNote(message, kind = "") {
+  $("customNote").textContent = message;
+  $("customNote").className = `custom-note ${kind}`.trim();
+}
+
+function cleanTickerInput(value) {
+  return String(value || "").trim().toUpperCase();
+}
+
+function renderWatchlist() {
+  $("watchlistChips").innerHTML = page.watchlist.map((ticker) => `
+    <button type="button" data-remove-ticker="${ticker}" title="Remove ${ticker}">
+      <span>${ticker}</span>
+      <i aria-hidden="true">x</i>
+    </button>
+  `).join("");
+  document.querySelectorAll("[data-remove-ticker]").forEach((button) => {
+    button.onclick = () => {
+      page.watchlist = page.watchlist.filter((ticker) => ticker !== button.dataset.removeTicker);
+      renderWatchlist();
+    };
+  });
+  $("topNInput").max = Math.min(Math.max(page.watchlist.length, 1), 10);
+  $("topNInput").value = Math.min(Number($("topNInput").value || 1), Number($("topNInput").max));
+}
+
+function addTicker(value) {
+  const entries = cleanTickerInput(value).split(",").map((ticker) => ticker.trim()).filter(Boolean);
+  const invalid = entries.find((ticker) => !/^[A-Z0-9][A-Z0-9.\-]{0,9}$/.test(ticker));
+  if (invalid) {
+    setCustomNote(`Invalid ticker format: ${invalid}`, "error");
+    return false;
+  }
+  page.watchlist = [...new Set([...page.watchlist, ...entries])];
+  $("tickerInput").value = "";
+  renderWatchlist();
+  setCustomNote(`${page.watchlist.length} tickers selected. Yahoo Finance data will be pulled when you run.`, "ready");
+  return true;
+}
+
+function wireWatchlistBuilder() {
+  renderWatchlist();
+  $("addTickerButton").onclick = () => addTicker($("tickerInput").value);
+  $("tickerInput").onkeydown = (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      addTicker($("tickerInput").value);
+    }
+  };
+  $("tickerInput").onpaste = () => setTimeout(() => {
+    if ($("tickerInput").value.includes(",")) addTicker($("tickerInput").value);
+  }, 0);
+  document.querySelectorAll("[data-starter]").forEach((button) => {
+    button.onclick = () => addTicker(button.dataset.starter);
+  });
+}
+
+function wireCustomRun() {
+  wireWatchlistBuilder();
+  const button = $("runCustomButton");
+  if (runningStatic) {
+    button.disabled = true;
+    setCustomNote("Live yfinance runs need the FastAPI backend. Clone the repo or deploy the backend to enable custom watchlists.", "error");
+    return;
+  }
+  button.onclick = runCustomUniverse;
+  setCustomNote("Backend connected. Edit tickers, choose a model, then run a custom watchlist.", "ready");
+}
+
+async function runCustomUniverse() {
+  const button = $("runCustomButton");
+  if ($("tickerInput").value.trim() && !addTicker($("tickerInput").value)) return;
+  const tickers = [...page.watchlist];
+  if (tickers.length < 3) {
+    setCustomNote("Choose at least 3 unique tickers before running.", "error");
+    return;
+  }
+  button.disabled = true;
+  setCustomNote("Downloading daily data from Yahoo Finance and recalculating the strategy...", "ready");
+  try {
+    const reply = await fetch("/api/custom-run", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tickers,
+        topN: Number($("topNInput").value || 2),
+        modelType: $("modelInput").value,
+      }),
+    });
+    const data = await reply.json();
+    if (!reply.ok) throw new Error(data.detail || "Custom run failed.");
+    page.chartRows = data.equity.series;
+    page.hover = null;
+    fillSummary(data.summary);
+    fillRankings(data.predictions.rows);
+    drawChart();
+    setCustomNote(`Custom watchlist loaded: ${data.tickers.join(", ")}`, "ready");
+  } catch (error) {
+    setCustomNote(error.message, "error");
+  } finally {
+    button.disabled = false;
+  }
 }
 
 function rowsInView() {
@@ -301,6 +407,7 @@ function rankRow(row) {
 
 async function start() {
   setDownloadLinks();
+  wireCustomRun();
   wireChart();
   const health = await getJson("/api/health");
   $("healthStatus").textContent = health.status === "ok" ? "Outputs ready" : "Run backtest first";
