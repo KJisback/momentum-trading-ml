@@ -17,17 +17,17 @@ const apiFiles = {
   "/api/predictions?limit=80": "data/predictions.json",
 };
 
+const $ = (id) => document.getElementById(id);
+const put = (id, value) => { $(id).textContent = value; };
+const percent = (n) => `${(n * 100).toFixed(2)}%`;
+const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
+
 const chartBook = {
   equity: ["Equity Curve", "Growth of $1 across the 2023-2025 test window.", "grossEquity", "netEquity", "Before costs", "After costs", (n) => `$${dollars.format(n)}`],
   returns: ["Weekly Return", "Week-by-week return, useful for spotting noisy periods and payoff bursts.", "grossReturn", "netReturn", "Gross weekly return", "Net weekly return", percent],
   drawdown: ["Drawdown", "Distance from the latest equity high. Lower values mean deeper pain.", "grossDrawdown", "netDrawdown", "Gross drawdown", "Net drawdown", percent],
   risk: ["Rolling Risk", "4-week rolling volatility, paired before and after costs.", "rollingGrossVolatility4w", "rollingNetVolatility4w", "Gross 4W volatility", "Net 4W volatility", percent],
 };
-
-const $ = (id) => document.getElementById(id);
-const put = (id, value) => { $(id).textContent = value; };
-const percent = (n) => `${(n * 100).toFixed(2)}%`;
-const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
 
 async function getJson(url) {
   const reply = await fetch(runningStatic ? apiFiles[url] : url);
