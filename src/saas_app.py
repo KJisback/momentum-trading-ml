@@ -13,7 +13,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from src.momentum_strategy import StrategyConfig, run_pipeline
+from src.momentum_strategy import StrategyConfig, run_live_pipeline
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -34,10 +34,11 @@ class CustomRunRequest(BaseModel):
     tickers: list[str] = Field(..., min_length=3, max_length=25)
     topN: int = Field(default=2, ge=1, le=10)
     modelType: str = "random_forest"
+    portfolioDescription: str = Field(default="Custom yfinance watchlist", max_length=140)
     entryCost: float = Field(default=0.001, ge=0, le=0.05)
     exitCost: float = Field(default=0.001, ge=0, le=0.05)
     start: str = "2017-01-01"
-    end: str = "2026-01-01"
+    end: str | None = None
     trainEnd: str = "2022-12-31"
     testStart: str = "2023-01-01"
 
@@ -135,13 +136,17 @@ def build_summary_payload(
     weekly: pd.DataFrame,
     predictions: pd.DataFrame,
     features: pd.DataFrame,
+    portfolio_description: str = "Default momentum universe",
+    data_as_of: str | None = None,
 ) -> dict:
     weekly = ensure_market_columns(weekly, predictions)
     performance = ensure_jensens_alpha(performance, weekly)
     before = performance.loc[performance["basis"] == "before_costs"].iloc[0]
     after = performance.loc[performance["basis"] == "after_costs"].iloc[0]
-    latest_week = weekly.sort_values("week").iloc[-1]
-    latest_predictions = predictions[predictions["week"] == latest_week["week"]].sort_values("rank")
+    sorted_weekly = weekly.sort_values("week")
+    latest_realized_week = sorted_weekly.iloc[-1]
+    latest_prediction_week = predictions.sort_values("week").iloc[-1]["week"]
+    latest_predictions = predictions[predictions["week"] == latest_prediction_week].sort_values("rank")
     selected = latest_predictions[latest_predictions["selected"] == True].copy()
 
     cost_drag = before["cumulative_return"] - after["cumulative_return"]
@@ -152,7 +157,10 @@ def build_summary_payload(
     rolling_vol = weekly["net_return"].rolling(4, min_periods=2).std().fillna(0)
     latest_rolling_avg = rolling_avg.iloc[-1]
     latest_rolling_vol = rolling_vol.iloc[-1]
-    latest_net_return = latest_week["net_return"]
+    latest_net_return = latest_realized_week["net_return"]
+    latest_market_volatility = latest_predictions["weekly_return"].std()
+    previous_market_volatility = features[features["week"] < latest_prediction_week].groupby("week")["weekly_return"].std()
+    previous_market_volatility = previous_market_volatility.iloc[-1] if not previous_market_volatility.empty else np.nan
     risk_mood = "Calm"
     if latest_rolling_vol > 0.04 or net_drawdown.iloc[-1] < -0.1:
         risk_mood = "Elevated"
@@ -160,7 +168,9 @@ def build_summary_payload(
         risk_mood = "Stressed"
 
     return {
-        "asOfWeek": latest_week["week"],
+        "asOfWeek": latest_prediction_week,
+        "dataAsOf": data_as_of,
+        "portfolioDescription": portfolio_description,
         "universeSize": int(features["ticker"].nunique()),
         "testWeeks": int(len(weekly)),
         "selectedStocks": [
@@ -169,6 +179,7 @@ def build_summary_payload(
                 "probability": rounded(row["predicted_probability"] * 100, 1),
                 "weight": rounded(row["weight"] * 100, 0),
                 "realizedNextWeekReturn": pct(row["next_week_return"]),
+                "isLiveForecast": bool(pd.isna(row["next_week_return"])),
             }
             for _, row in selected.iterrows()
         ],
@@ -184,8 +195,8 @@ def build_summary_payload(
             "currentDrawdown": pct(net_drawdown.iloc[-1]),
             "rollingAvgReturn4w": pct(latest_rolling_avg),
             "rollingVolatility4w": pct(latest_rolling_vol),
-            "marketVolatility": pct(latest_week.get("market_volatility")),
-            "previousMarketVolatility": pct(latest_week.get("previous_market_volatility")),
+            "marketVolatility": pct(latest_market_volatility),
+            "previousMarketVolatility": pct(previous_market_volatility),
             "riskMood": risk_mood,
         },
         "comparison": {
@@ -206,10 +217,11 @@ def build_summary_payload(
         },
         "plainEnglish": [
             f"The strategy grew $1 to ${1 + after['cumulative_return']:.2f} after trading costs.",
+            f"Live forecast picks are based on yfinance data through {data_as_of or latest_prediction_week}.",
             f"Jensen's alpha versus the equal-weight universe benchmark was {pct(after['jensens_alpha'])}.",
             f"The worst peak-to-trough decline was {pct(after['max_drawdown'])}.",
             f"Trading costs reduced cumulative return by {pct(cost_drag)}.",
-            f"Latest market volatility was {pct(latest_week.get('market_volatility'))}, versus {pct(latest_week.get('previous_market_volatility'))} the previous week.",
+            f"Latest market volatility was {pct(latest_market_volatility)}, versus {pct(previous_market_volatility)} the previous week.",
             f"The latest week returned {pct(latest_net_return)} after costs, with a {risk_mood.lower()} risk mood.",
         ],
         "bestWeek": {"week": best_week["week"], "return": pct(best_week["net_return"])},
@@ -250,6 +262,16 @@ def build_equity_payload(weekly: pd.DataFrame) -> dict:
 
 
 def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
+    rows = rows.copy()
+    market = (
+        rows.groupby("week")["weekly_return"]
+        .std()
+        .rename("market_volatility")
+        .reset_index()
+        .sort_values("week")
+    )
+    market["previous_market_volatility"] = market["market_volatility"].shift(1)
+    rows = rows.merge(market, on="week", how="left", suffixes=("", "_from_predictions"))
     rows = rows.sort_values(["week", "rank"], ascending=[False, True])
     rows = rows.head(max(1, min(limit, 500)))
     return {
@@ -262,6 +284,9 @@ def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
                 "selected": bool(row["selected"]),
                 "weight": rounded(row["weight"] * 100, 0),
                 "nextWeekReturn": pct(row["next_week_return"]),
+                "isLiveForecast": bool(pd.isna(row["next_week_return"])),
+                "marketVolatility": rounded(row.get("market_volatility_from_predictions", row.get("market_volatility")), 5),
+                "previousMarketVolatility": rounded(row.get("previous_market_volatility"), 5),
             }
             for _, row in rows.iterrows()
         ]
@@ -316,7 +341,7 @@ def custom_run(request: CustomRunRequest) -> dict:
 
     config = StrategyConfig(
         start=request.start,
-        end=request.end,
+        end=request.end or "2099-01-01",
         train_end=request.trainEnd,
         test_start=request.testStart,
         top_n=request.topN,
@@ -325,7 +350,7 @@ def custom_run(request: CustomRunRequest) -> dict:
         model_type=request.modelType,
     )
     try:
-        result = run_pipeline(output_dir=OUTPUT_DIR / "custom_preview", config=config, tickers=tickers)
+        result = run_live_pipeline(output_dir=OUTPUT_DIR / "custom_preview", config=config, tickers=tickers)
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except RuntimeError as exc:
@@ -338,6 +363,8 @@ def custom_run(request: CustomRunRequest) -> dict:
             result["weekly_returns"],
             result["predictions"],
             result["weekly_dataset"],
+            request.portfolioDescription,
+            result.get("as_of"),
         ),
         "equity": build_equity_payload(result["weekly_returns"]),
         "predictions": build_predictions_payload(result["predictions"], 120),

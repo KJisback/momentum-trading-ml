@@ -1,5 +1,7 @@
 {
   "asOfWeek": "2025-12-26",
+  "dataAsOf": null,
+  "portfolioDescription": "Default momentum universe",
   "universeSize": 10,
   "testWeeks": 156,
   "selectedStocks": [
@@ -7,13 +9,15 @@
       "ticker": "BRK.B",
       "probability": 72.6,
       "weight": 50.0,
-      "realizedNextWeekReturn": "0.87%"
+      "realizedNextWeekReturn": "0.87%",
+      "isLiveForecast": false
     },
     {
       "ticker": "AAPL",
       "probability": 72.1,
       "weight": 50.0,
-      "realizedNextWeekReturn": "-0.56%"
+      "realizedNextWeekReturn": "-0.56%",
+      "isLiveForecast": false
     }
   ],
   "headline": {
@@ -28,8 +32,8 @@
     "currentDrawdown": "-3.71%",
     "rollingAvgReturn4w": "0.10%",
     "rollingVolatility4w": "1.37%",
-    "marketVolatility": "1.66%",
-    "previousMarketVolatility": "1.32%",
+    "marketVolatility": "1.32%",
+    "previousMarketVolatility": "2.14%",
     "riskMood": "Calm"
   },
   "comparison": {
@@ -50,10 +54,11 @@
   },
   "plainEnglish": [
     "The strategy grew $1 to $2.41 after trading costs.",
+    "Live forecast picks are based on yfinance data through 2025-12-26.",
     "Jensen's alpha versus the equal-weight universe benchmark was 3.80%.",
     "The worst peak-to-trough decline was -15.85%.",
     "Trading costs reduced cumulative return by 87.78%.",
-    "Latest market volatility was 1.66%, versus 1.32% the previous week.",
+    "Latest market volatility was 1.32%, versus 2.14% the previous week.",
     "The latest week returned -0.05% after costs, with a calm risk mood."
   ],
   "bestWeek": {

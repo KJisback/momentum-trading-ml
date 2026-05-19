@@ -83,17 +83,24 @@ def test_custom_run_returns_dashboard_payload(monkeypatch):
             "predictions": predictions[predictions["ticker"].isin(["AAPL", "MSFT", "GOOGL"])],
             "performance": performance,
             "model_metrics": {"test_accuracy": 0.5, "test_roc_auc": 0.5},
+            "as_of": "2026-05-19",
         }
 
-    monkeypatch.setattr(saas_app, "run_pipeline", fake_pipeline)
+    monkeypatch.setattr(saas_app, "run_live_pipeline", fake_pipeline)
     response = client.post(
         "/api/custom-run",
-        json={"tickers": ["AAPL", "MSFT", "GOOGL"], "topN": 2},
+        json={
+            "tickers": ["AAPL", "MSFT", "GOOGL"],
+            "topN": 2,
+            "portfolioDescription": "Large-cap momentum sleeve",
+        },
     )
 
     assert response.status_code == 200
     payload = response.json()
     assert payload["tickers"] == ["AAPL", "MSFT", "GOOGL"]
+    assert payload["summary"]["portfolioDescription"] == "Large-cap momentum sleeve"
+    assert payload["summary"]["dataAsOf"] == "2026-05-19"
     assert "summary" in payload
     assert "equity" in payload
     assert "predictions" in payload

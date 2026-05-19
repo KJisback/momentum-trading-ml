@@ -9,6 +9,7 @@ portfolio with transaction costs.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Iterable
 
@@ -158,7 +159,7 @@ def download_daily_data(
     return daily
 
 
-def build_weekly_dataset(daily: pd.DataFrame) -> pd.DataFrame:
+def build_weekly_dataset(daily: pd.DataFrame, require_label: bool = True) -> pd.DataFrame:
     """Convert daily OHLCV data into weekly features and labels."""
     required = {"date", "ticker", "open", "high", "low", "close", "volume"}
     missing = required.difference(daily.columns)
@@ -208,7 +209,8 @@ def build_weekly_dataset(daily: pd.DataFrame) -> pd.DataFrame:
     volume_ma_4w = grouped["volume"].rolling(4).mean().reset_index(level=0, drop=True)
     weekly["volume_change_4w"] = weekly["volume"] / volume_ma_4w - 1
 
-    model_data = weekly.dropna(subset=FEATURE_COLUMNS + ["next_week_return", "target"]).copy()
+    required_columns = FEATURE_COLUMNS + (["next_week_return", "target"] if require_label else [])
+    model_data = weekly.dropna(subset=required_columns).copy()
     model_data["week"] = pd.to_datetime(model_data["week"])
     return model_data
 
@@ -250,10 +252,11 @@ def make_model(model_type: str = "random_forest", random_state: int = 42, n_jobs
 
 def train_predict(model_data: pd.DataFrame, config: StrategyConfig) -> tuple[Pipeline, pd.DataFrame, dict]:
     """Train on 2017-2022 and return weekly out-of-sample predictions."""
-    train_mask = model_data["week"] <= pd.Timestamp(config.train_end)
+    labeled = model_data.dropna(subset=["next_week_return", "target"]).copy()
+    train_mask = labeled["week"] <= pd.Timestamp(config.train_end)
     test_mask = model_data["week"] >= pd.Timestamp(config.test_start)
 
-    train = model_data.loc[train_mask].copy()
+    train = labeled.loc[train_mask].copy()
     test = model_data.loc[test_mask].copy()
     if train.empty or test.empty:
         raise ValueError("Training or test dataset is empty. Check date filters and input data.")
@@ -271,11 +274,13 @@ def train_predict(model_data: pd.DataFrame, config: StrategyConfig) -> tuple[Pip
     predictions["predicted_probability"] = positive_probability
     predictions["predicted_label"] = (predictions["predicted_probability"] >= 0.5).astype(int)
 
+    scored = predictions.dropna(subset=["target"]).copy()
     metrics = {
-        "test_accuracy": accuracy_score(predictions["target"], predictions["predicted_label"]),
-        "test_roc_auc": _safe_roc_auc(predictions["target"], predictions["predicted_probability"]),
+        "test_accuracy": accuracy_score(scored["target"], scored["predicted_label"]) if not scored.empty else float("nan"),
+        "test_roc_auc": _safe_roc_auc(scored["target"], scored["predicted_probability"]) if not scored.empty else float("nan"),
         "train_rows": int(len(train)),
-        "test_rows": int(len(test)),
+        "test_rows": int(len(scored)),
+        "prediction_rows": int(len(test)),
     }
     return model, predictions, metrics
 
@@ -298,12 +303,13 @@ def construct_portfolio(predictions: pd.DataFrame, config: StrategyConfig) -> pd
 
 def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Compute weekly strategy returns before and after transaction costs."""
-    selected = portfolio_rows.loc[portfolio_rows["selected"]].copy()
+    realized_rows = portfolio_rows.dropna(subset=["next_week_return"]).copy()
+    selected = realized_rows.loc[realized_rows["selected"]].copy()
     market = (
-        portfolio_rows.groupby("week", as_index=False)
+        realized_rows.groupby("week", as_index=False)
         .agg(
             market_return=("next_week_return", "mean"),
-            market_volatility=("next_week_return", "std"),
+            market_volatility=("weekly_return", "std"),
         )
         .sort_values("week")
     )
@@ -452,4 +458,57 @@ def run_pipeline(
         "weekly_returns": weekly_returns,
         "performance": performance,
         "model_metrics": model_metrics,
+    }
+
+
+def run_live_pipeline(
+    output_dir: str | Path = "outputs/custom_preview",
+    config: StrategyConfig | None = None,
+    tickers: Iterable[str] = RAW_TICKERS,
+    as_of: date | None = None,
+) -> dict:
+    """Run the strategy with yfinance data through runtime and include the latest forecast week."""
+    run_date = as_of or date.today()
+    download_end = (run_date + timedelta(days=1)).isoformat()
+    base_config = config or StrategyConfig()
+    live_config = StrategyConfig(
+        start=base_config.start,
+        end=download_end,
+        train_end=base_config.train_end,
+        test_start=base_config.test_start,
+        top_n=base_config.top_n,
+        entry_cost=base_config.entry_cost,
+        exit_cost=base_config.exit_cost,
+        periods_per_year=base_config.periods_per_year,
+        random_state=base_config.random_state,
+        n_jobs=base_config.n_jobs,
+        model_type=base_config.model_type,
+    )
+    ticker_list = list(tickers)
+    validate_config(live_config, ticker_list)
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    daily = download_daily_data(ticker_list, live_config.start, live_config.end)
+    weekly_dataset = build_weekly_dataset(daily, require_label=False)
+    model, predictions, model_metrics = train_predict(weekly_dataset, live_config)
+    portfolio_rows = construct_portfolio(predictions, live_config)
+    weekly_returns, performance = backtest_portfolio(portfolio_rows, live_config)
+    validate_outputs(portfolio_rows.dropna(subset=["next_week_return"]), weekly_returns, performance)
+
+    daily.to_csv(output_path / "daily_ohlcv.csv", index=False)
+    weekly_dataset.to_csv(output_path / "weekly_features.csv", index=False)
+    portfolio_rows.to_csv(output_path / "weekly_stock_predictions.csv", index=False)
+    weekly_returns.to_csv(output_path / "weekly_portfolio_returns.csv", index=False)
+    performance.to_csv(output_path / "performance_metrics.csv", index=False)
+
+    return {
+        "model": model,
+        "daily": daily,
+        "weekly_dataset": weekly_dataset,
+        "predictions": portfolio_rows,
+        "weekly_returns": weekly_returns,
+        "performance": performance,
+        "model_metrics": model_metrics,
+        "as_of": run_date.isoformat(),
     }

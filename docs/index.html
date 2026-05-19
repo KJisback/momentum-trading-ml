@@ -38,6 +38,10 @@
             </div>
             <div class="watchlist-chips" id="watchlistChips"></div>
           </div>
+          <label class="description-field">
+            Portfolio description
+            <input id="portfolioDescriptionInput" value="Custom yfinance watchlist" maxlength="140" />
+          </label>
           <label>
             Top N
             <input id="topNInput" type="number" min="1" max="10" value="2" />
@@ -57,6 +61,7 @@
         <div>
           <span class="label">After-cost cumulative return</span>
           <strong id="netCumulativeReturn">--</strong>
+          <p class="portfolio-description" id="portfolioDescription">Default momentum universe</p>
           <p id="growthSentence">Loading latest strategy results.</p>
         </div>
         <div class="summary-grid">
@@ -138,6 +143,7 @@
             <div>
               <h2>Latest Picks</h2>
               <p id="asOfWeek">--</p>
+              <p id="dataAsOf">--</p>
             </div>
           </div>
           <div id="selectedStocks" class="stock-list"></div>

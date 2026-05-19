@@ -131,6 +131,7 @@ async function runCustomUniverse() {
         tickers,
         topN: Number($("topNInput").value || 2),
         modelType: $("modelInput").value,
+        portfolioDescription: $("portfolioDescriptionInput").value || "Custom yfinance watchlist",
       }),
     });
     const data = await reply.json();
@@ -331,7 +332,9 @@ function fillSummary(data) {
   }).forEach(([id, value]) => put(id, value));
 
   put("growthSentence", data.plainEnglish[0]);
-  put("asOfWeek", `Week of ${data.asOfWeek}`);
+  put("portfolioDescription", data.portfolioDescription || "Default momentum universe");
+  put("asOfWeek", `Forecast week of ${data.asOfWeek}`);
+  put("dataAsOf", data.dataAsOf ? `yfinance data as of ${data.dataAsOf}` : "Precomputed dashboard data");
   put("bestWeekLabel", `Best week - ${data.bestWeek.week}`);
   put("worstWeekLabel", `Worst week - ${data.worstWeek.week}`);
   $("selectedStocks").innerHTML = data.selectedStocks.map(stockCard).join("");
@@ -339,11 +342,12 @@ function fillSummary(data) {
 }
 
 function stockCard(stock) {
+  const resultLabel = stock.isLiveForecast ? "Expected next week" : "Realized next week";
   return `
     <div class="stock-card">
       <strong>${stock.ticker}</strong>
       <div class="stock-meta"><span>${stock.probability}% confidence</span><span>${stock.weight}% weight</span></div>
-      <div class="stock-meta"><span>Realized next week</span><span>${stock.realizedNextWeekReturn}</span></div>
+      <div class="stock-meta"><span>${resultLabel}</span><span>${stock.realizedNextWeekReturn}</span></div>
     </div>
   `;
 }
@@ -378,13 +382,13 @@ function weekChip(week) {
 function showWeek() {
   const rows = page.rankings.get(page.week) || [];
   const picked = rows.filter((row) => row.selected);
-  const market = page.chartRows.find((row) => row.week === page.week);
+  const market = page.chartRows.find((row) => row.week === page.week) || rows[0];
   const avgConfidence = picked.reduce((sum, row) => sum + row.probability, 0) / (picked.length || 1);
   const basketReturn = picked.reduce((sum, row) => sum + numberFromPercent(row.nextWeekReturn) * (row.weight / 100), 0);
 
   put("weekSelectedPair", picked.map((row) => row.ticker).join(" + ") || "--");
   put("weekAvgConfidence", picked.length ? `${avgConfidence.toFixed(1)}%` : "--");
-  put("weekBasketReturn", picked.length ? `${basketReturn.toFixed(2)}%` : "--");
+  put("weekBasketReturn", picked.length && Number.isFinite(basketReturn) ? `${basketReturn.toFixed(2)}%` : "Pending");
   put("weekMarketVolatility", market ? percent(market.marketVolatility) : "--");
   put("weekPreviousMarketVolatility", market && Number.isFinite(market.previousMarketVolatility) ? percent(market.previousMarketVolatility) : "--");
   document.querySelectorAll("[data-week-chip]").forEach((chip) => chip.classList.toggle("active", chip.dataset.weekChip === page.week));
@@ -403,7 +407,7 @@ function rankRow(row) {
       <td>${row.ticker}</td>
       <td><div class="confidence-cell"><span>${row.probability}%</span><div class="confidence-track"><i style="width:${bar}%"></i></div></div></td>
       <td>${row.weight}%</td>
-      <td>${row.nextWeekReturn}</td>
+      <td>${row.isLiveForecast ? "Pending" : row.nextWeekReturn}</td>
       <td class="${row.selected ? "yes" : "no"}">${row.selected ? "Selected" : "Watch"}</td>
     </tr>
   `;
