@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Momentum Strategy Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Momentum Strategy Desk</p>
+        <h1>Strategy health at a glance</h1>
+      </div>
+      <div class="status-pill" id="healthStatus">Checking outputs</div>
+    </header>
+
+    <main>
+      <section class="summary-band">
+        <div>
+          <span class="label">After-cost cumulative return</span>
+          <strong id="netCumulativeReturn">--</strong>
+          <p id="growthSentence">Loading latest strategy results.</p>
+        </div>
+        <div class="summary-grid">
+          <div class="metric">
+            <span>Annual return</span>
+            <strong id="netAnnualizedReturn">--</strong>
+          </div>
+          <div class="metric">
+            <span>Sharpe</span>
+            <strong id="netSharpe">--</strong>
+          </div>
+          <div class="metric">
+            <span>Max drawdown</span>
+            <strong id="maxDrawdown">--</strong>
+          </div>
+          <div class="metric">
+            <span>Hit rate</span>
+            <strong id="hitRate">--</strong>
+          </div>
+          <div class="metric">
+            <span>Latest week</span>
+            <strong id="latestWeeklyReturn">--</strong>
+          </div>
+          <div class="metric">
+            <span>Risk mood</span>
+            <strong id="riskMood">--</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="layout">
+        <div class="panel large">
+          <div class="panel-head">
+            <div>
+              <h2>Equity Curve</h2>
+              <p id="chartDescription">Growth of $1 across the 2023-2025 test window.</p>
+            </div>
+            <div class="chart-actions">
+              <div class="segmented" aria-label="Chart mode">
+                <button class="active" data-mode="equity">Equity</button>
+                <button data-mode="returns">Weekly</button>
+                <button data-mode="drawdown">Drawdown</button>
+                <button data-mode="risk">Rolling risk</button>
+              </div>
+              <div class="segmented compact" aria-label="Chart range">
+                <button class="active" data-range="all">All</button>
+                <button data-range="52">1Y</button>
+                <button data-range="26">6M</button>
+              </div>
+            </div>
+          </div>
+          <div class="chart-shell">
+            <canvas id="equityChart" width="900" height="360"></canvas>
+            <div class="chart-tooltip" id="chartTooltip" hidden></div>
+          </div>
+          <div class="chart-readout">
+            <div>
+              <span>Hovered week</span>
+              <strong id="hoverWeek">Move over chart</strong>
+            </div>
+            <div>
+              <span>Before costs</span>
+              <strong id="hoverGross">--</strong>
+            </div>
+            <div>
+              <span>After costs</span>
+              <strong id="hoverNet">--</strong>
+            </div>
+          </div>
+          <div class="legend" id="chartLegend">
+            <span><i class="gross"></i> Before costs</span>
+            <span><i class="net"></i> After costs</span>
+          </div>
+        </div>
+
+        <aside class="panel picks">
+          <div class="panel-head">
+            <div>
+              <h2>Latest Picks</h2>
+              <p id="asOfWeek">--</p>
+            </div>
+          </div>
+          <div id="selectedStocks" class="stock-list"></div>
+        </aside>
+      </section>
+
+      <section class="cards">
+        <article class="panel">
+          <h2>Cost Impact</h2>
+          <div class="split-row">
+            <span>Before costs</span>
+            <strong id="beforeCosts">--</strong>
+          </div>
+          <div class="split-row">
+            <span>After costs</span>
+            <strong id="afterCosts">--</strong>
+          </div>
+          <div class="split-row muted">
+            <span>Cost drag</span>
+            <strong id="costDrag">--</strong>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>This Week</h2>
+          <div class="split-row">
+            <span>Net weekly return</span>
+            <strong id="thisWeekReturn">--</strong>
+          </div>
+          <div class="split-row">
+            <span>Current drawdown</span>
+            <strong id="currentDrawdown">--</strong>
+          </div>
+          <div class="split-row">
+            <span>4-week average</span>
+            <strong id="rollingAvgReturn4w">--</strong>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Best & Worst Weeks</h2>
+          <div class="split-row">
+            <span id="bestWeekLabel">Best week</span>
+            <strong id="bestWeekReturn">--</strong>
+          </div>
+          <div class="split-row">
+            <span id="worstWeekLabel">Worst week</span>
+            <strong id="worstWeekReturn">--</strong>
+          </div>
+        </article>
+      </section>
+
+      <section class="cards single">
+        <article class="panel">
+          <h2>Plain-English Readout</h2>
+          <ul id="plainEnglish"></ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Week Ranking Explorer</h2>
+            <p>Pick a rebalance week and scan the full stock ranking at a glance.</p>
+          </div>
+          <div class="ranking-tools">
+            <label for="weekSelect">Week</label>
+            <select id="weekSelect"></select>
+            <div class="downloads">
+              <a href="/api/downloads/weekly_stock_predictions.csv">Predictions CSV</a>
+              <a href="/api/downloads/performance_metrics.csv">Metrics CSV</a>
+            </div>
+          </div>
+        </div>
+        <div class="week-glance">
+          <div>
+            <span class="label">Selected pair</span>
+            <strong id="weekSelectedPair">--</strong>
+          </div>
+          <div>
+            <span class="label">Average confidence</span>
+            <strong id="weekAvgConfidence">--</strong>
+          </div>
+          <div>
+            <span class="label">Realized basket return</span>
+            <strong id="weekBasketReturn">--</strong>
+          </div>
+        </div>
+        <div class="week-chips" id="weekChips"></div>
+        <div class="table-wrap ranking-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Ticker</th>
+                <th>Model confidence</th>
+                <th>Weight</th>
+                <th>Next-week result</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="predictionRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

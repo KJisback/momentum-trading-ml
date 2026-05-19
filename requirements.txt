@@ -1,0 +1,11 @@
+pandas>=2.2
+numpy>=1.26
+yfinance>=0.2.40
+scikit-learn>=1.4
+matplotlib>=3.8
+seaborn>=0.13
+jupyter>=1.0
+ipykernel>=6.29
+pytest>=8.0
+fastapi>=0.115
+uvicorn[standard]>=0.30
