@@ -299,6 +299,15 @@ def construct_portfolio(predictions: pd.DataFrame, config: StrategyConfig) -> pd
 def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Compute weekly strategy returns before and after transaction costs."""
     selected = portfolio_rows.loc[portfolio_rows["selected"]].copy()
+    market = (
+        portfolio_rows.groupby("week", as_index=False)
+        .agg(
+            market_return=("next_week_return", "mean"),
+            market_volatility=("next_week_return", "std"),
+        )
+        .sort_values("week")
+    )
+    market["previous_market_volatility"] = market["market_volatility"].shift(1)
     weekly = (
         selected.groupby("week", as_index=False)
         .agg(
@@ -308,6 +317,7 @@ def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> 
         )
         .sort_values("week")
     )
+    weekly = weekly.merge(market, on="week", how="left")
 
     weekly["entry_cost"] = config.entry_cost
     weekly["exit_cost"] = config.exit_cost
@@ -318,14 +328,24 @@ def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> 
 
     metrics = pd.DataFrame(
         [
-            {"basis": "before_costs", **performance_metrics(weekly["gross_return"], config.periods_per_year)},
-            {"basis": "after_costs", **performance_metrics(weekly["net_return"], config.periods_per_year)},
+            {
+                "basis": "before_costs",
+                **performance_metrics(weekly["gross_return"], config.periods_per_year, weekly["market_return"]),
+            },
+            {
+                "basis": "after_costs",
+                **performance_metrics(weekly["net_return"], config.periods_per_year, weekly["market_return"]),
+            },
         ]
     )
     return weekly, metrics
 
 
-def performance_metrics(returns: pd.Series, periods_per_year: int = 52) -> dict[str, float]:
+def performance_metrics(
+    returns: pd.Series,
+    periods_per_year: int = 52,
+    benchmark_returns: pd.Series | None = None,
+) -> dict[str, float]:
     """Calculate common backtest metrics from periodic returns."""
     returns = returns.dropna()
     if returns.empty:
@@ -337,6 +357,7 @@ def performance_metrics(returns: pd.Series, periods_per_year: int = 52) -> dict[
             "max_drawdown": np.nan,
             "hit_rate": np.nan,
             "average_weekly_return": np.nan,
+            "jensens_alpha": np.nan,
         }
 
     equity = (1 + returns).cumprod()
@@ -356,7 +377,27 @@ def performance_metrics(returns: pd.Series, periods_per_year: int = 52) -> dict[
         "max_drawdown": float(drawdown.min()),
         "hit_rate": float((returns > 0).mean()),
         "average_weekly_return": float(returns.mean()),
+        "jensens_alpha": _jensens_alpha(returns, benchmark_returns, periods_per_year),
     }
+
+
+def _jensens_alpha(
+    returns: pd.Series,
+    benchmark_returns: pd.Series | None,
+    periods_per_year: int,
+) -> float:
+    if benchmark_returns is None:
+        return float("nan")
+
+    aligned = pd.concat(
+        [returns.rename("strategy"), benchmark_returns.rename("benchmark")],
+        axis=1,
+    ).dropna()
+    if len(aligned) < 2 or np.isclose(aligned["benchmark"].var(ddof=1), 0):
+        return float("nan")
+
+    beta, alpha = np.polyfit(aligned["benchmark"], aligned["strategy"], 1)
+    return float(alpha * periods_per_year)
 
 
 def validate_outputs(portfolio_rows: pd.DataFrame, weekly_returns: pd.DataFrame, performance: pd.DataFrame) -> None:
@@ -373,7 +414,8 @@ def validate_outputs(portfolio_rows: pd.DataFrame, weekly_returns: pd.DataFrame,
     probabilities = portfolio_rows["predicted_probability"]
     if not probabilities.between(0, 1).all():
         raise RuntimeError("Predicted probabilities must be between 0 and 1.")
-    if weekly_returns[["gross_return", "net_return"]].isna().any().any():
+    required_return_columns = ["gross_return", "net_return", "market_return", "market_volatility"]
+    if weekly_returns[required_return_columns].isna().any().any():
         raise RuntimeError("Weekly return output contains missing values.")
 
 

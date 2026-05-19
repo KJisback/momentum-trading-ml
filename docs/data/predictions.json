@@ -3,7 +3,7 @@
     {
       "week": "2025-12-26",
       "ticker": "BRK.B",
-      "probability": 72.5,
+      "probability": 72.6,
       "rank": 1,
       "selected": true,
       "weight": 50.0,
@@ -21,7 +21,7 @@
     {
       "week": "2025-12-26",
       "ticker": "V",
-      "probability": 67.2,
+      "probability": 67.1,
       "rank": 3,
       "selected": false,
       "weight": 0.0,
@@ -30,7 +30,7 @@
     {
       "week": "2025-12-26",
       "ticker": "MSFT",
-      "probability": 66.3,
+      "probability": 66.2,
       "rank": 4,
       "selected": false,
       "weight": 0.0,
@@ -39,7 +39,7 @@
     {
       "week": "2025-12-26",
       "ticker": "AMZN",
-      "probability": 65.2,
+      "probability": 65.3,
       "rank": 5,
       "selected": false,
       "weight": 0.0,
@@ -57,7 +57,7 @@
     {
       "week": "2025-12-26",
       "ticker": "META",
-      "probability": 60.9,
+      "probability": 60.8,
       "rank": 7,
       "selected": false,
       "weight": 0.0,
@@ -111,7 +111,7 @@
     {
       "week": "2025-12-19",
       "ticker": "V",
-      "probability": 50.0,
+      "probability": 49.9,
       "rank": 3,
       "selected": false,
       "weight": 0.0,
@@ -165,7 +165,7 @@
     {
       "week": "2025-12-19",
       "ticker": "MSFT",
-      "probability": 45.2,
+      "probability": 45.1,
       "rank": 9,
       "selected": false,
       "weight": 0.0,
@@ -255,7 +255,7 @@
     {
       "week": "2025-12-12",
       "ticker": "MSFT",
-      "probability": 44.8,
+      "probability": 44.9,
       "rank": 9,
       "selected": false,
       "weight": 0.0,
@@ -543,7 +543,7 @@
     {
       "week": "2025-11-14",
       "ticker": "V",
-      "probability": 58.2,
+      "probability": 58.1,
       "rank": 1,
       "selected": true,
       "weight": 50.0,
@@ -606,7 +606,7 @@
     {
       "week": "2025-11-14",
       "ticker": "META",
-      "probability": 49.9,
+      "probability": 49.8,
       "rank": 8,
       "selected": false,
       "weight": 0.0,

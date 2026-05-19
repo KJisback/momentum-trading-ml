@@ -5,8 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
+import numpy as np
 import pandas as pd
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -48,10 +50,14 @@ def read_output_csv(name: str) -> pd.DataFrame:
 
 
 def pct(value: float) -> str:
+    if pd.isna(value):
+        return "--"
     return f"{value * 100:.2f}%"
 
 
-def rounded(value: float, digits: int = 2) -> float:
+def rounded(value: float, digits: int = 2) -> float | None:
+    if pd.isna(value):
+        return None
     return round(float(value), digits)
 
 
@@ -70,12 +76,68 @@ def clean_tickers(raw_tickers: list[str]) -> list[str]:
     return tickers
 
 
+def ensure_market_columns(weekly: pd.DataFrame, predictions: pd.DataFrame | None = None) -> pd.DataFrame:
+    weekly = weekly.copy()
+    if {"market_return", "market_volatility"}.issubset(weekly.columns):
+        if "previous_market_volatility" not in weekly.columns:
+            weekly["previous_market_volatility"] = weekly["market_volatility"].shift(1)
+        return weekly
+
+    if predictions is not None and "next_week_return" in predictions.columns:
+        market = (
+            predictions.groupby("week", as_index=False)
+            .agg(
+                market_return=("next_week_return", "mean"),
+                market_volatility=("next_week_return", "std"),
+            )
+            .sort_values("week")
+        )
+        market["previous_market_volatility"] = market["market_volatility"].shift(1)
+        return weekly.merge(market, on="week", how="left")
+
+    for column in ["market_return", "market_volatility", "previous_market_volatility"]:
+        if column not in weekly.columns:
+            weekly[column] = np.nan
+    return weekly
+
+
+def ensure_jensens_alpha(performance: pd.DataFrame, weekly: pd.DataFrame) -> pd.DataFrame:
+    performance = performance.copy()
+    if "jensens_alpha" in performance.columns:
+        return performance
+
+    return_columns = {"before_costs": "gross_return", "after_costs": "net_return"}
+    performance["jensens_alpha"] = np.nan
+    for basis, return_column in return_columns.items():
+        mask = performance["basis"] == basis
+        if mask.any() and return_column in weekly.columns and "market_return" in weekly.columns:
+            performance.loc[mask, "jensens_alpha"] = jensens_alpha(
+                weekly[return_column],
+                weekly["market_return"],
+            )
+    return performance
+
+
+def jensens_alpha(returns: pd.Series, benchmark_returns: pd.Series, periods_per_year: int = 52) -> float:
+    aligned = pd.concat(
+        [returns.rename("strategy"), benchmark_returns.rename("benchmark")],
+        axis=1,
+    ).dropna()
+    if len(aligned) < 2 or np.isclose(aligned["benchmark"].var(ddof=1), 0):
+        return float("nan")
+
+    _, alpha = np.polyfit(aligned["benchmark"], aligned["strategy"], 1)
+    return float(alpha * periods_per_year)
+
+
 def build_summary_payload(
     performance: pd.DataFrame,
     weekly: pd.DataFrame,
     predictions: pd.DataFrame,
     features: pd.DataFrame,
 ) -> dict:
+    weekly = ensure_market_columns(weekly, predictions)
+    performance = ensure_jensens_alpha(performance, weekly)
     before = performance.loc[performance["basis"] == "before_costs"].iloc[0]
     after = performance.loc[performance["basis"] == "after_costs"].iloc[0]
     latest_week = weekly.sort_values("week").iloc[-1]
@@ -115,13 +177,15 @@ def build_summary_payload(
             "netAnnualizedReturn": pct(after["annualized_return"]),
             "netSharpe": rounded(after["sharpe_ratio"]),
             "maxDrawdown": pct(after["max_drawdown"]),
-            "hitRate": pct(after["hit_rate"]),
+            "jensensAlpha": pct(after["jensens_alpha"]),
             "avgWeeklyReturn": pct(after["average_weekly_return"]),
             "costDrag": pct(cost_drag),
             "latestWeeklyReturn": pct(latest_net_return),
             "currentDrawdown": pct(net_drawdown.iloc[-1]),
             "rollingAvgReturn4w": pct(latest_rolling_avg),
             "rollingVolatility4w": pct(latest_rolling_vol),
+            "marketVolatility": pct(latest_week.get("market_volatility")),
+            "previousMarketVolatility": pct(latest_week.get("previous_market_volatility")),
             "riskMood": risk_mood,
         },
         "comparison": {
@@ -130,21 +194,22 @@ def build_summary_payload(
                 "annualizedReturn": pct(before["annualized_return"]),
                 "sharpe": rounded(before["sharpe_ratio"]),
                 "maxDrawdown": pct(before["max_drawdown"]),
-                "hitRate": pct(before["hit_rate"]),
+                "jensensAlpha": pct(before["jensens_alpha"]),
             },
             "afterCosts": {
                 "cumulativeReturn": pct(after["cumulative_return"]),
                 "annualizedReturn": pct(after["annualized_return"]),
                 "sharpe": rounded(after["sharpe_ratio"]),
                 "maxDrawdown": pct(after["max_drawdown"]),
-                "hitRate": pct(after["hit_rate"]),
+                "jensensAlpha": pct(after["jensens_alpha"]),
             },
         },
         "plainEnglish": [
             f"The strategy grew $1 to ${1 + after['cumulative_return']:.2f} after trading costs.",
-            f"It won in {pct(after['hit_rate'])} of test weeks from 2023 through 2025.",
+            f"Jensen's alpha versus the equal-weight universe benchmark was {pct(after['jensens_alpha'])}.",
             f"The worst peak-to-trough decline was {pct(after['max_drawdown'])}.",
             f"Trading costs reduced cumulative return by {pct(cost_drag)}.",
+            f"Latest market volatility was {pct(latest_week.get('market_volatility'))}, versus {pct(latest_week.get('previous_market_volatility'))} the previous week.",
             f"The latest week returned {pct(latest_net_return)} after costs, with a {risk_mood.lower()} risk mood.",
         ],
         "bestWeek": {"week": best_week["week"], "return": pct(best_week["net_return"])},
@@ -153,6 +218,7 @@ def build_summary_payload(
 
 
 def build_equity_payload(weekly: pd.DataFrame) -> dict:
+    weekly = ensure_market_columns(weekly)
     weekly = weekly.sort_values("week").copy()
     weekly["gross_drawdown"] = weekly["gross_equity"] / weekly["gross_equity"].cummax() - 1
     weekly["net_drawdown"] = weekly["net_equity"] / weekly["net_equity"].cummax() - 1
@@ -174,6 +240,9 @@ def build_equity_payload(weekly: pd.DataFrame) -> dict:
                 "rollingGrossReturn4w": rounded(row["rolling_gross_return_4w"], 5),
                 "rollingNetVolatility4w": rounded(row["rolling_net_volatility_4w"], 5),
                 "rollingGrossVolatility4w": rounded(row["rolling_gross_volatility_4w"], 5),
+                "marketReturn": rounded(row.get("market_return"), 5),
+                "marketVolatility": rounded(row.get("market_volatility"), 5),
+                "previousMarketVolatility": rounded(row.get("previous_market_volatility"), 5),
             }
             for _, row in weekly.iterrows()
         ]
@@ -200,8 +269,11 @@ def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
 
 
 @app.get("/")
-def index() -> FileResponse:
-    return FileResponse(WEB_DIR / "index.html")
+def index() -> HTMLResponse:
+    html = (WEB_DIR / "index.html").read_text(encoding="utf-8")
+    html = html.replace('href="styles.css"', 'href="/static/styles.css"')
+    html = html.replace('src="app.js"', 'src="/static/app.js"')
+    return HTMLResponse(html)
 
 
 @app.get("/api/health")

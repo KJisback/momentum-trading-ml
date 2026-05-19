@@ -73,8 +73,8 @@
             <strong id="maxDrawdown">--</strong>
           </div>
           <div class="metric">
-            <span>Hit rate</span>
-            <strong id="hitRate">--</strong>
+            <span>Jensen's alpha</span>
+            <strong id="jensensAlpha">--</strong>
           </div>
           <div class="metric">
             <span>Latest week</span>
@@ -100,6 +100,7 @@
                 <button data-mode="returns">Weekly</button>
                 <button data-mode="drawdown">Drawdown</button>
                 <button data-mode="risk">Rolling risk</button>
+                <button data-mode="market">Market vol</button>
               </div>
               <div class="segmented compact" aria-label="Chart range">
                 <button class="active" data-range="all">All</button>
@@ -233,6 +234,14 @@
           <div>
             <span class="label">Realized basket return</span>
             <strong id="weekBasketReturn">--</strong>
+          </div>
+          <div>
+            <span class="label">Market volatility</span>
+            <strong id="weekMarketVolatility">--</strong>
+          </div>
+          <div>
+            <span class="label">Previous week volatility</span>
+            <strong id="weekPreviousMarketVolatility">--</strong>
           </div>
         </div>
         <div class="week-chips" id="weekChips"></div>

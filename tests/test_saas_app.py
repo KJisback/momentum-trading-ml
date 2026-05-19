@@ -27,6 +27,7 @@ def test_summary_endpoint_is_human_readable_when_outputs_exist():
     assert payload["headline"]["latestWeeklyReturn"].endswith("%")
     assert payload["headline"]["currentDrawdown"].endswith("%")
     assert payload["headline"]["rollingAvgReturn4w"].endswith("%")
+    assert payload["headline"]["jensensAlpha"].endswith("%")
     assert payload["headline"]["riskMood"] in {"Calm", "Elevated", "Stressed"}
     assert payload["selectedStocks"]
     assert payload["plainEnglish"]
@@ -46,6 +47,8 @@ def test_equity_endpoint_returns_chart_series():
         "netDrawdown",
         "rollingNetReturn4w",
         "rollingNetVolatility4w",
+        "marketVolatility",
+        "previousMarketVolatility",
     }.issubset(series[0])
 
 

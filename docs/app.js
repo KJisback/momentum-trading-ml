@@ -21,7 +21,7 @@ const apiFiles = {
 
 const $ = (id) => document.getElementById(id);
 const put = (id, value) => { $(id).textContent = value; };
-const percent = (n) => `${(n * 100).toFixed(2)}%`;
+const percent = (n) => Number.isFinite(n) ? `${(n * 100).toFixed(2)}%` : "--";
 const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
 
 const chartBook = {
@@ -29,6 +29,7 @@ const chartBook = {
   returns: ["Weekly Return", "Week-by-week return, useful for spotting noisy periods and payoff bursts.", "grossReturn", "netReturn", "Gross weekly return", "Net weekly return", percent],
   drawdown: ["Drawdown", "Distance from the latest equity high. Lower values mean deeper pain.", "grossDrawdown", "netDrawdown", "Gross drawdown", "Net drawdown", percent],
   risk: ["Rolling Risk", "4-week rolling volatility, paired before and after costs.", "rollingGrossVolatility4w", "rollingNetVolatility4w", "Gross 4W volatility", "Net 4W volatility", percent],
+  market: ["Market Volatility", "Universe-level dispersion for the current and previous holding weeks.", "previousMarketVolatility", "marketVolatility", "Previous week volatility", "Current week volatility", percent],
 };
 
 async function getJson(url) {
@@ -156,7 +157,7 @@ function chartBounds(rows, grossKey, netKey) {
   const low = Math.min(...values);
   const high = Math.max(...values);
   if (page.chart === "drawdown") return [Math.min(low, -0.01), 0];
-  if (page.chart === "risk") return [0, Math.max(high, 0.01)];
+  if (["risk", "market"].includes(page.chart)) return [0, Math.max(high, 0.01)];
   if (page.chart === "returns") {
     const edge = Math.max(Math.abs(low), Math.abs(high), 0.01);
     return [-edge, edge];
@@ -316,7 +317,7 @@ function fillSummary(data) {
     netAnnualizedReturn: h.netAnnualizedReturn,
     netSharpe: h.netSharpe,
     maxDrawdown: h.maxDrawdown,
-    hitRate: h.hitRate,
+    jensensAlpha: h.jensensAlpha,
     latestWeeklyReturn: h.latestWeeklyReturn,
     riskMood: h.riskMood,
     beforeCosts: c.beforeCosts.cumulativeReturn,
@@ -377,12 +378,15 @@ function weekChip(week) {
 function showWeek() {
   const rows = page.rankings.get(page.week) || [];
   const picked = rows.filter((row) => row.selected);
+  const market = page.chartRows.find((row) => row.week === page.week);
   const avgConfidence = picked.reduce((sum, row) => sum + row.probability, 0) / (picked.length || 1);
   const basketReturn = picked.reduce((sum, row) => sum + numberFromPercent(row.nextWeekReturn) * (row.weight / 100), 0);
 
   put("weekSelectedPair", picked.map((row) => row.ticker).join(" + ") || "--");
   put("weekAvgConfidence", picked.length ? `${avgConfidence.toFixed(1)}%` : "--");
   put("weekBasketReturn", picked.length ? `${basketReturn.toFixed(2)}%` : "--");
+  put("weekMarketVolatility", market ? percent(market.marketVolatility) : "--");
+  put("weekPreviousMarketVolatility", market && Number.isFinite(market.previousMarketVolatility) ? percent(market.previousMarketVolatility) : "--");
   document.querySelectorAll("[data-week-chip]").forEach((chip) => chip.classList.toggle("active", chip.dataset.weekChip === page.week));
   $("predictionRows").innerHTML = rows.map(rankRow).join("");
 }
