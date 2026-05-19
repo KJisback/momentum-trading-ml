@@ -51,9 +51,11 @@
             <select id="modelInput">
               <option value="random_forest">Random Forest</option>
               <option value="hist_gradient_boosting">Gradient Boosting</option>
+              <option value="xgboost">XGBoost</option>
             </select>
           </label>
           <button id="runCustomButton" type="button">Run custom watchlist</button>
+          <button id="emailPicksButton" type="button" disabled>Email weekly picks</button>
         </div>
       </section>
 
@@ -72,6 +74,14 @@
           <div class="metric">
             <span>Sharpe</span>
             <strong id="netSharpe">--</strong>
+          </div>
+          <div class="metric">
+            <span>Sortino</span>
+            <strong id="netSortino">--</strong>
+          </div>
+          <div class="metric">
+            <span>Beta</span>
+            <strong id="netBeta">--</strong>
           </div>
           <div class="metric">
             <span>Max drawdown</span>
@@ -102,6 +112,7 @@
             <div class="chart-actions">
               <div class="segmented" aria-label="Chart mode">
                 <button class="active" data-mode="equity">Equity</button>
+                <button data-mode="benchmark">Benchmark</button>
                 <button data-mode="returns">Weekly</button>
                 <button data-mode="drawdown">Drawdown</button>
                 <button data-mode="risk">Rolling risk</button>
@@ -217,7 +228,7 @@
         <div class="panel-head">
           <div>
             <h2>Week Ranking Explorer</h2>
-            <p>Pick a rebalance week and scan the full stock ranking at a glance.</p>
+            <p>Backtesting results, live forecast ranks, and top-company industries.</p>
           </div>
           <div class="ranking-tools">
             <label for="weekSelect">Week</label>
@@ -257,6 +268,7 @@
               <tr>
                 <th>Rank</th>
                 <th>Ticker</th>
+                <th>Industry</th>
                 <th>Model confidence</th>
                 <th>Weight</th>
                 <th>Next-week result</th>

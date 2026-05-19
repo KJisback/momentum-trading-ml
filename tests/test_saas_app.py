@@ -41,6 +41,9 @@ def test_summary_endpoint_is_human_readable_when_outputs_exist():
     assert payload["headline"]["currentDrawdown"].endswith("%")
     assert payload["headline"]["rollingAvgReturn4w"].endswith("%")
     assert payload["headline"]["jensensAlpha"].endswith("%")
+    assert "netSortino" in payload["headline"]
+    assert "netBeta" in payload["headline"]
+    assert payload["benchmark"]["name"] == "US/India index blend"
     assert payload["headline"]["riskMood"] in {"Calm", "Elevated", "Stressed"}
     assert payload["selectedStocks"]
     assert payload["plainEnglish"]
@@ -62,6 +65,7 @@ def test_equity_endpoint_returns_chart_series():
         "rollingNetVolatility4w",
         "marketVolatility",
         "previousMarketVolatility",
+        "benchmarkEquity",
     }.issubset(series[0])
 
 
@@ -71,7 +75,7 @@ def test_predictions_endpoint_returns_ranked_rows():
     assert response.status_code == 200
     rows = response.json()["rows"]
     assert len(rows) == 5
-    assert {"week", "ticker", "probability", "rank", "selected"}.issubset(rows[0])
+    assert {"week", "ticker", "probability", "rank", "selected", "industry"}.issubset(rows[0])
 
 
 def test_custom_run_rejects_invalid_ticker():
@@ -117,3 +121,22 @@ def test_custom_run_returns_dashboard_payload(monkeypatch):
     assert "summary" in payload
     assert "equity" in payload
     assert "predictions" in payload
+
+
+def test_email_endpoint_reports_missing_smtp(monkeypatch):
+    monkeypatch.delenv("SMTP_HOST", raising=False)
+    monkeypatch.setattr(saas_app, "run_custom_payload", lambda request: {
+        "summary": {
+            "portfolioDescription": "Test",
+            "asOfWeek": "2026-05-15",
+            "dataAsOf": "2026-05-19",
+            "selectedStocks": [],
+        }
+    })
+
+    response = client.post(
+        "/api/email-weekly-picks",
+        json={"tickers": ["AAPL", "MSFT", "GOOGL"], "topN": 2},
+    )
+
+    assert response.status_code == 503

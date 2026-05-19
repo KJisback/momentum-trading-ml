@@ -80,6 +80,8 @@ def test_train_rank_and_backtest_pipeline_on_synthetic_data():
     assert {"market_return", "market_volatility", "previous_market_volatility"}.issubset(weekly_returns.columns)
     assert set(performance["basis"]) == {"before_costs", "after_costs"}
     assert "jensens_alpha" in performance.columns
+    assert "sortino_ratio" in performance.columns
+    assert "beta" in performance.columns
     assert model_metrics["train_rows"] > 0
     assert model_metrics["test_rows"] > 0
 

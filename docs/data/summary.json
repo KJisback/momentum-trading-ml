@@ -10,20 +10,24 @@
       "probability": 72.6,
       "weight": 50.0,
       "realizedNextWeekReturn": "0.87%",
-      "isLiveForecast": false
+      "isLiveForecast": false,
+      "industry": "Unknown"
     },
     {
       "ticker": "AAPL",
       "probability": 72.1,
       "weight": 50.0,
       "realizedNextWeekReturn": "-0.56%",
-      "isLiveForecast": false
+      "isLiveForecast": false,
+      "industry": "Unknown"
     }
   ],
   "headline": {
     "netCumulativeReturn": "141.48%",
     "netAnnualizedReturn": "34.16%",
     "netSharpe": 1.63,
+    "netSortino": 3.49,
+    "netBeta": 0.81,
     "maxDrawdown": "-15.85%",
     "jensensAlpha": "3.80%",
     "avgWeeklyReturn": "0.61%",
@@ -41,6 +45,8 @@
       "cumulativeReturn": "229.25%",
       "annualizedReturn": "48.77%",
       "sharpe": 2.32,
+      "sortino": 5.19,
+      "beta": 0.81,
       "maxDrawdown": "-14.98%",
       "jensensAlpha": "14.20%"
     },
@@ -48,6 +54,8 @@
       "cumulativeReturn": "141.48%",
       "annualizedReturn": "34.16%",
       "sharpe": 1.63,
+      "sortino": 3.49,
+      "beta": 0.81,
       "maxDrawdown": "-15.85%",
       "jensensAlpha": "3.80%"
     }
@@ -68,5 +76,15 @@
   "worstWeek": {
     "week": "2024-07-26",
     "return": "-6.05%"
+  },
+  "benchmark": {
+    "name": "US/India index blend",
+    "indexes": [
+      "S&P 500",
+      "Nasdaq Composite",
+      "Dow Jones",
+      "Nifty 50",
+      "Sensex"
+    ]
   }
 }

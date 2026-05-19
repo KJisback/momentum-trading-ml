@@ -9,6 +9,7 @@ const page = {
   range: "all",
   hover: null,
   watchlist: [...defaultWatchlist],
+  lastRequest: null,
 };
 
 const runningStatic = !["127.0.0.1", "localhost"].includes(location.hostname);
@@ -27,6 +28,7 @@ const clamp = (n, min, max) => Math.max(min, Math.min(n, max));
 
 const chartBook = {
   equity: ["Equity Curve", "Growth of $1 across the 2023-2025 test window.", "grossEquity", "netEquity", "Before costs", "After costs", (n) => `$${dollars.format(n)}`],
+  benchmark: ["Benchmark Overlay", "Portfolio growth against the US/India index blend.", "netEquity", "benchmarkEquity", "After-cost portfolio", "US/India index blend", (n) => `$${dollars.format(n)}`],
   returns: ["Weekly Return", "Week-by-week return, useful for spotting noisy periods and payoff bursts.", "grossReturn", "netReturn", "Gross weekly return", "Net weekly return", percent],
   drawdown: ["Drawdown", "Distance from the latest equity high. Lower values mean deeper pain.", "grossDrawdown", "netDrawdown", "Gross drawdown", "Net drawdown", percent],
   risk: ["Rolling Risk", "4-week rolling volatility, paired before and after costs.", "rollingGrossVolatility4w", "rollingNetVolatility4w", "Gross 4W volatility", "Net 4W volatility", percent],
@@ -100,6 +102,7 @@ function wireWatchlistBuilder() {
   document.querySelectorAll("[data-starter]").forEach((button) => {
     button.onclick = () => addTicker(button.dataset.starter);
   });
+  $("emailPicksButton").onclick = emailWeeklyPicks;
 }
 
 function wireCustomRun() {
@@ -125,15 +128,16 @@ async function runCustomUniverse() {
   button.disabled = true;
   setCustomNote("Downloading daily data from Yahoo Finance and recalculating the strategy...", "ready");
   try {
+    page.lastRequest = {
+      tickers,
+      topN: Number($("topNInput").value || 2),
+      modelType: $("modelInput").value,
+      portfolioDescription: $("portfolioDescriptionInput").value || "Custom yfinance watchlist",
+    };
     const reply = await fetch(`${apiBase}/api/custom-run`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        tickers,
-        topN: Number($("topNInput").value || 2),
-        modelType: $("modelInput").value,
-        portfolioDescription: $("portfolioDescriptionInput").value || "Custom yfinance watchlist",
-      }),
+      body: JSON.stringify(page.lastRequest),
     });
     const data = await reply.json();
     if (!reply.ok) throw new Error(data.detail || "Custom run failed.");
@@ -142,11 +146,32 @@ async function runCustomUniverse() {
     fillSummary(data.summary);
     fillRankings(data.predictions.rows);
     drawChart();
+    $("emailPicksButton").disabled = false;
     setCustomNote(`Custom watchlist loaded: ${data.tickers.join(", ")}`, "ready");
   } catch (error) {
     setCustomNote(error.message, "error");
   } finally {
     button.disabled = false;
+  }
+}
+
+async function emailWeeklyPicks() {
+  if (!page.lastRequest) return;
+  $("emailPicksButton").disabled = true;
+  setCustomNote("Sending weekly picks email...", "ready");
+  try {
+    const reply = await fetch(`${apiBase}/api/email-weekly-picks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(page.lastRequest),
+    });
+    const data = await reply.json();
+    if (!reply.ok) throw new Error(data.detail || "Email failed.");
+    setCustomNote(`Email sent to ${data.recipients.join(", ")}`, "ready");
+  } catch (error) {
+    setCustomNote(error.message, "error");
+  } finally {
+    $("emailPicksButton").disabled = false;
   }
 }
 
@@ -318,6 +343,8 @@ function fillSummary(data) {
     netCumulativeReturn: h.netCumulativeReturn,
     netAnnualizedReturn: h.netAnnualizedReturn,
     netSharpe: h.netSharpe,
+    netSortino: h.netSortino,
+    netBeta: h.netBeta,
     maxDrawdown: h.maxDrawdown,
     jensensAlpha: h.jensensAlpha,
     latestWeeklyReturn: h.latestWeeklyReturn,
@@ -347,6 +374,7 @@ function stockCard(stock) {
   return `
     <div class="stock-card">
       <strong>${stock.ticker}</strong>
+      <div class="stock-meta"><span>Industry</span><span>${stock.industry || "Unknown"}</span></div>
       <div class="stock-meta"><span>${stock.probability}% confidence</span><span>${stock.weight}% weight</span></div>
       <div class="stock-meta"><span>${resultLabel}</span><span>${stock.realizedNextWeekReturn}</span></div>
     </div>
@@ -406,6 +434,7 @@ function rankRow(row) {
     <tr class="${row.selected ? "selected-row" : ""}">
       <td><span class="rank-badge">${row.rank}</span></td>
       <td>${row.ticker}</td>
+      <td>${row.industry || "Unknown"}</td>
       <td><div class="confidence-cell"><span>${row.probability}%</span><div class="confidence-track"><i style="width:${bar}%"></i></div></div></td>
       <td>${row.weight}%</td>
       <td>${row.isLiveForecast ? "Pending" : row.nextWeekReturn}</td>

@@ -5,6 +5,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import re
+import smtplib
+from email.message import EmailMessage
 
 import numpy as np
 import pandas as pd
@@ -16,6 +18,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from src.momentum_strategy import StrategyConfig, run_live_pipeline
+import yfinance as yf
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -65,6 +68,10 @@ class CustomRunRequest(BaseModel):
     testStart: str = "2023-01-01"
 
 
+class EmailAlertRequest(CustomRunRequest):
+    recipients: list[str] | None = None
+
+
 def read_output_csv(name: str) -> pd.DataFrame:
     path = OUTPUT_DIR / name
     if not path.exists():
@@ -82,6 +89,22 @@ def rounded(value: float, digits: int = 2) -> float | None:
     if pd.isna(value):
         return None
     return round(float(value), digits)
+
+
+def env_list(name: str) -> list[str]:
+    raw = os.getenv(name, "")
+    return [value.strip() for value in raw.split(",") if value.strip()]
+
+
+def industry_map(tickers: list[str]) -> dict[str, str]:
+    industries: dict[str, str] = {}
+    for ticker in tickers[:10]:
+        try:
+            info = yf.Ticker(ticker.replace(".", "-")).get_info()
+            industries[ticker] = info.get("industry") or info.get("sector") or "Unknown"
+        except Exception:
+            industries[ticker] = "Unknown"
+    return industries
 
 
 def clean_tickers(raw_tickers: list[str]) -> list[str]:
@@ -126,19 +149,41 @@ def ensure_market_columns(weekly: pd.DataFrame, predictions: pd.DataFrame | None
 
 def ensure_jensens_alpha(performance: pd.DataFrame, weekly: pd.DataFrame) -> pd.DataFrame:
     performance = performance.copy()
-    if "jensens_alpha" in performance.columns:
+    for column in ["jensens_alpha", "sortino_ratio", "beta"]:
+        if column not in performance.columns:
+            performance[column] = np.nan
+    if performance["jensens_alpha"].notna().all() and performance["sortino_ratio"].notna().all() and performance["beta"].notna().all():
         return performance
 
     return_columns = {"before_costs": "gross_return", "after_costs": "net_return"}
-    performance["jensens_alpha"] = np.nan
     for basis, return_column in return_columns.items():
         mask = performance["basis"] == basis
         if mask.any() and return_column in weekly.columns and "market_return" in weekly.columns:
-            performance.loc[mask, "jensens_alpha"] = jensens_alpha(
-                weekly[return_column],
-                weekly["market_return"],
-            )
+            returns = weekly[return_column]
+            benchmark = weekly.get("benchmark_blend_return", weekly["market_return"])
+            performance.loc[mask, "jensens_alpha"] = jensens_alpha(returns, benchmark)
+            performance.loc[mask, "sortino_ratio"] = sortino_ratio(returns)
+            performance.loc[mask, "beta"] = beta(returns, benchmark)
     return performance
+
+
+def sortino_ratio(returns: pd.Series, periods_per_year: int = 52) -> float:
+    returns = returns.dropna()
+    if returns.empty:
+        return float("nan")
+    equity = (1 + returns).cumprod()
+    annualized_return = equity.iloc[-1] ** (periods_per_year / len(returns)) - 1
+    downside = returns.loc[returns < 0].std(ddof=1) * np.sqrt(periods_per_year)
+    if downside and not np.isclose(downside, 0):
+        return float(annualized_return / downside)
+    return float("nan")
+
+
+def beta(returns: pd.Series, benchmark_returns: pd.Series) -> float:
+    aligned = pd.concat([returns.rename("strategy"), benchmark_returns.rename("benchmark")], axis=1).dropna()
+    if len(aligned) < 2 or np.isclose(aligned["benchmark"].var(ddof=1), 0):
+        return float("nan")
+    return float(np.cov(aligned["strategy"], aligned["benchmark"], ddof=1)[0, 1] / aligned["benchmark"].var(ddof=1))
 
 
 def jensens_alpha(returns: pd.Series, benchmark_returns: pd.Series, periods_per_year: int = 52) -> float:
@@ -160,6 +205,7 @@ def build_summary_payload(
     features: pd.DataFrame,
     portfolio_description: str = "Default momentum universe",
     data_as_of: str | None = None,
+    industries: dict[str, str] | None = None,
 ) -> dict:
     weekly = ensure_market_columns(weekly, predictions)
     performance = ensure_jensens_alpha(performance, weekly)
@@ -170,6 +216,7 @@ def build_summary_payload(
     latest_prediction_week = predictions.sort_values("week").iloc[-1]["week"]
     latest_predictions = predictions[predictions["week"] == latest_prediction_week].sort_values("rank")
     selected = latest_predictions[latest_predictions["selected"] == True].copy()
+    industry_lookup = industries or {}
 
     cost_drag = before["cumulative_return"] - after["cumulative_return"]
     best_week = weekly.loc[weekly["net_return"].idxmax()]
@@ -202,6 +249,7 @@ def build_summary_payload(
                 "weight": rounded(row["weight"] * 100, 0),
                 "realizedNextWeekReturn": pct(row["next_week_return"]),
                 "isLiveForecast": bool(pd.isna(row["next_week_return"])),
+                "industry": industry_lookup.get(row["ticker"], "Unknown"),
             }
             for _, row in selected.iterrows()
         ],
@@ -209,6 +257,8 @@ def build_summary_payload(
             "netCumulativeReturn": pct(after["cumulative_return"]),
             "netAnnualizedReturn": pct(after["annualized_return"]),
             "netSharpe": rounded(after["sharpe_ratio"]),
+            "netSortino": rounded(after["sortino_ratio"]),
+            "netBeta": rounded(after["beta"]),
             "maxDrawdown": pct(after["max_drawdown"]),
             "jensensAlpha": pct(after["jensens_alpha"]),
             "avgWeeklyReturn": pct(after["average_weekly_return"]),
@@ -226,6 +276,8 @@ def build_summary_payload(
                 "cumulativeReturn": pct(before["cumulative_return"]),
                 "annualizedReturn": pct(before["annualized_return"]),
                 "sharpe": rounded(before["sharpe_ratio"]),
+                "sortino": rounded(before["sortino_ratio"]),
+                "beta": rounded(before["beta"]),
                 "maxDrawdown": pct(before["max_drawdown"]),
                 "jensensAlpha": pct(before["jensens_alpha"]),
             },
@@ -233,6 +285,8 @@ def build_summary_payload(
                 "cumulativeReturn": pct(after["cumulative_return"]),
                 "annualizedReturn": pct(after["annualized_return"]),
                 "sharpe": rounded(after["sharpe_ratio"]),
+                "sortino": rounded(after["sortino_ratio"]),
+                "beta": rounded(after["beta"]),
                 "maxDrawdown": pct(after["max_drawdown"]),
                 "jensensAlpha": pct(after["jensens_alpha"]),
             },
@@ -248,6 +302,10 @@ def build_summary_payload(
         ],
         "bestWeek": {"week": best_week["week"], "return": pct(best_week["net_return"])},
         "worstWeek": {"week": worst_week["week"], "return": pct(worst_week["net_return"])},
+        "benchmark": {
+            "name": "US/India index blend",
+            "indexes": ["S&P 500", "Nasdaq Composite", "Dow Jones", "Nifty 50", "Sensex"],
+        },
     }
 
 
@@ -277,13 +335,20 @@ def build_equity_payload(weekly: pd.DataFrame) -> dict:
                 "marketReturn": rounded(row.get("market_return"), 5),
                 "marketVolatility": rounded(row.get("market_volatility"), 5),
                 "previousMarketVolatility": rounded(row.get("previous_market_volatility"), 5),
+                "benchmarkReturn": rounded(row.get("benchmark_blend_return"), 5),
+                "benchmarkEquity": rounded(row.get("benchmark_blend_equity"), 4),
+                "sp500Equity": rounded(row.get("benchmark_gspc_equity"), 4),
+                "nasdaqEquity": rounded(row.get("benchmark_ixic_equity"), 4),
+                "dowEquity": rounded(row.get("benchmark_dji_equity"), 4),
+                "niftyEquity": rounded(row.get("benchmark_nsei_equity"), 4),
+                "sensexEquity": rounded(row.get("benchmark_bsesn_equity"), 4),
             }
             for _, row in weekly.iterrows()
         ]
     }
 
 
-def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
+def build_predictions_payload(rows: pd.DataFrame, limit: int = 60, industries: dict[str, str] | None = None) -> dict:
     rows = rows.copy()
     market = (
         rows.groupby("week")["weekly_return"]
@@ -296,6 +361,7 @@ def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
     rows = rows.merge(market, on="week", how="left", suffixes=("", "_from_predictions"))
     rows = rows.sort_values(["week", "rank"], ascending=[False, True])
     rows = rows.head(max(1, min(limit, 500)))
+    industry_lookup = industries or {}
     return {
         "rows": [
             {
@@ -309,6 +375,7 @@ def build_predictions_payload(rows: pd.DataFrame, limit: int = 60) -> dict:
                 "isLiveForecast": bool(pd.isna(row["next_week_return"])),
                 "marketVolatility": rounded(row.get("market_volatility_from_predictions", row.get("market_volatility")), 5),
                 "previousMarketVolatility": rounded(row.get("previous_market_volatility"), 5),
+                "industry": industry_lookup.get(row["ticker"], "Unknown"),
             }
             for _, row in rows.iterrows()
         ]
@@ -356,8 +423,7 @@ def predictions(limit: int = 60) -> dict:
     return build_predictions_payload(read_output_csv("weekly_stock_predictions.csv"), limit)
 
 
-@app.post("/api/custom-run")
-def custom_run(request: CustomRunRequest) -> dict:
+def run_custom_payload(request: CustomRunRequest, include_industries: bool = True) -> dict:
     tickers = clean_tickers(request.tickers)
     if request.topN > len(tickers):
         raise HTTPException(status_code=422, detail="topN cannot exceed the number of tickers.")
@@ -379,6 +445,8 @@ def custom_run(request: CustomRunRequest) -> dict:
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
+    latest_rows = result["predictions"].sort_values(["week", "rank"], ascending=[False, True]).head(10)
+    industries = industry_map(latest_rows["ticker"].tolist()) if include_industries else {}
     return {
         "tickers": tickers,
         "summary": build_summary_payload(
@@ -388,11 +456,78 @@ def custom_run(request: CustomRunRequest) -> dict:
             result["weekly_dataset"],
             request.portfolioDescription,
             result.get("as_of"),
+            industries,
         ),
         "equity": build_equity_payload(result["weekly_returns"]),
-        "predictions": build_predictions_payload(result["predictions"], 120),
+        "predictions": build_predictions_payload(result["predictions"], 120, industries),
         "modelMetrics": result["model_metrics"],
     }
+
+
+@app.post("/api/custom-run")
+def custom_run(request: CustomRunRequest) -> dict:
+    return run_custom_payload(request)
+
+
+def send_email(subject: str, body: str, recipients: list[str]) -> None:
+    host = os.getenv("SMTP_HOST")
+    username = os.getenv("SMTP_USERNAME")
+    password = os.getenv("SMTP_PASSWORD")
+    sender = os.getenv("SMTP_FROM") or username
+    if not host or not sender or not recipients:
+        raise HTTPException(status_code=503, detail="Email is not configured.")
+
+    msg = EmailMessage()
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = ", ".join(recipients)
+    msg.set_content(body)
+
+    port = int(os.getenv("SMTP_PORT", "587"))
+    with smtplib.SMTP(host, port, timeout=30) as smtp:
+        smtp.starttls()
+        if username and password:
+            smtp.login(username, password)
+        smtp.send_message(msg)
+
+
+def alert_body(payload: dict) -> str:
+    lines = [
+        payload["summary"]["portfolioDescription"],
+        f"Forecast week: {payload['summary']['asOfWeek']}",
+        f"Data as of: {payload['summary'].get('dataAsOf') or 'runtime'}",
+        "",
+        "Companies to buy/watch this week:",
+    ]
+    for stock in payload["summary"]["selectedStocks"]:
+        lines.append(
+            f"- {stock['ticker']} | {stock['probability']}% confidence | "
+            f"{stock['weight']}% weight | {stock.get('industry', 'Unknown')}"
+        )
+    return "\n".join(lines)
+
+
+@app.post("/api/email-weekly-picks")
+def email_weekly_picks(request: EmailAlertRequest) -> dict:
+    payload = run_custom_payload(request)
+    recipients = request.recipients or env_list("ALERT_RECIPIENTS")
+    send_email("Momentum weekly picks", alert_body(payload), recipients)
+    return {"status": "sent", "recipients": recipients}
+
+
+@app.get("/api/cron/weekly-email")
+def cron_weekly_email(token: str | None = None) -> dict:
+    secret = os.getenv("CRON_SECRET")
+    if secret and token != secret:
+        raise HTTPException(status_code=403, detail="Invalid cron token.")
+    tickers = env_list("DEFAULT_ALERT_TICKERS") or ["AAPL", "MSFT", "GOOGL", "AMZN", "META"]
+    request = EmailAlertRequest(
+        tickers=tickers,
+        topN=int(os.getenv("DEFAULT_ALERT_TOP_N", "2")),
+        modelType=os.getenv("DEFAULT_ALERT_MODEL", "xgboost"),
+        portfolioDescription=os.getenv("DEFAULT_ALERT_DESCRIPTION", "Weekly momentum alert"),
+    )
+    return email_weekly_picks(request)
 
 
 @app.get("/api/downloads/{file_name}")

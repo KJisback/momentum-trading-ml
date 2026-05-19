@@ -23,9 +23,21 @@ from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
+try:
+    from xgboost import XGBClassifier
+except ImportError:  # pragma: no cover - exercised only when optional dependency is missing
+    XGBClassifier = None
+
 
 RAW_TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "JPM", "V", "JNJ", "BRK.B"]
 YF_TICKER_MAP = {"BRK.B": "BRK-B"}
+BENCHMARK_INDEXES = {
+    "^GSPC": "S&P 500",
+    "^IXIC": "Nasdaq Composite",
+    "^DJI": "Dow Jones",
+    "^NSEI": "Nifty 50",
+    "^BSESN": "Sensex",
+}
 FEATURE_COLUMNS = [
     "ret_1w",
     "ret_2w",
@@ -55,6 +67,7 @@ class StrategyConfig:
     random_state: int = 42
     n_jobs: int = 1
     model_type: str = "random_forest"
+    benchmark_tickers: tuple[str, ...] = tuple(BENCHMARK_INDEXES.keys())
 
 
 def validate_config(config: StrategyConfig, tickers: Iterable[str] = RAW_TICKERS) -> None:
@@ -76,8 +89,8 @@ def validate_config(config: StrategyConfig, tickers: Iterable[str] = RAW_TICKERS
         raise ValueError("periods_per_year must be positive.")
     if config.n_jobs == 0:
         raise ValueError("n_jobs cannot be 0.")
-    if config.model_type not in {"random_forest", "hist_gradient_boosting"}:
-        raise ValueError("model_type must be 'random_forest' or 'hist_gradient_boosting'.")
+    if config.model_type not in {"random_forest", "hist_gradient_boosting", "xgboost"}:
+        raise ValueError("model_type must be 'random_forest', 'hist_gradient_boosting', or 'xgboost'.")
 
 
 def to_yfinance_ticker(ticker: str) -> str:
@@ -215,6 +228,42 @@ def build_weekly_dataset(daily: pd.DataFrame, require_label: bool = True) -> pd.
     return model_data
 
 
+def build_benchmark_weekly(daily: pd.DataFrame) -> pd.DataFrame:
+    """Build weekly index benchmark returns and growth series."""
+    if daily.empty:
+        return pd.DataFrame()
+
+    frames: list[pd.DataFrame] = []
+    for ticker, rows in daily.groupby("ticker", sort=True):
+        weekly = rows.sort_values("date").set_index("date")["close"].resample("W-FRI").last().dropna()
+        frame = pd.DataFrame(
+            {
+                "week": weekly.index,
+                f"benchmark_{_safe_column_name(ticker)}_return": weekly.pct_change(),
+            }
+        )
+        frames.append(frame)
+
+    if not frames:
+        return pd.DataFrame()
+
+    benchmark = frames[0]
+    for frame in frames[1:]:
+        benchmark = benchmark.merge(frame, on="week", how="outer")
+    benchmark = benchmark.sort_values("week")
+
+    return_columns = [column for column in benchmark.columns if column.endswith("_return")]
+    benchmark["benchmark_blend_return"] = benchmark[return_columns].mean(axis=1)
+    for column in return_columns + ["benchmark_blend_return"]:
+        equity_column = column.replace("_return", "_equity")
+        benchmark[equity_column] = (1 + benchmark[column].fillna(0)).cumprod()
+    return benchmark.dropna(subset=["benchmark_blend_return"])
+
+
+def _safe_column_name(value: str) -> str:
+    return value.replace("^", "").replace(".", "_").replace("-", "_").lower()
+
+
 def make_model(model_type: str = "random_forest", random_state: int = 42, n_jobs: int = 1) -> Pipeline:
     """Create the classifier pipeline.
 
@@ -238,8 +287,25 @@ def make_model(model_type: str = "random_forest", random_state: int = 42, n_jobs
             random_state=random_state,
             n_jobs=n_jobs,
         )
+    elif model_type == "xgboost":
+        if XGBClassifier is None:
+            raise ValueError("xgboost is not installed. Install requirements.txt or choose another model.")
+        estimator = XGBClassifier(
+            n_estimators=450,
+            max_depth=3,
+            learning_rate=0.035,
+            subsample=0.85,
+            colsample_bytree=0.85,
+            min_child_weight=4,
+            reg_lambda=1.5,
+            reg_alpha=0.05,
+            objective="binary:logistic",
+            eval_metric="logloss",
+            random_state=random_state,
+            n_jobs=n_jobs,
+        )
     else:
-        raise ValueError("model_type must be 'random_forest' or 'hist_gradient_boosting'.")
+        raise ValueError("model_type must be 'random_forest', 'hist_gradient_boosting', or 'xgboost'.")
 
     return Pipeline(
         steps=[
@@ -301,7 +367,11 @@ def construct_portfolio(predictions: pd.DataFrame, config: StrategyConfig) -> pd
     return ranked
 
 
-def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> tuple[pd.DataFrame, pd.DataFrame]:
+def backtest_portfolio(
+    portfolio_rows: pd.DataFrame,
+    config: StrategyConfig,
+    benchmark_weekly: pd.DataFrame | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Compute weekly strategy returns before and after transaction costs."""
     realized_rows = portfolio_rows.dropna(subset=["next_week_return"]).copy()
     selected = realized_rows.loc[realized_rows["selected"]].copy()
@@ -324,6 +394,10 @@ def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> 
         .sort_values("week")
     )
     weekly = weekly.merge(market, on="week", how="left")
+    if benchmark_weekly is not None and not benchmark_weekly.empty:
+        weekly = weekly.merge(benchmark_weekly, on="week", how="left")
+    if "benchmark_blend_return" not in weekly.columns:
+        weekly["benchmark_blend_return"] = weekly["market_return"]
 
     weekly["entry_cost"] = config.entry_cost
     weekly["exit_cost"] = config.exit_cost
@@ -336,11 +410,11 @@ def backtest_portfolio(portfolio_rows: pd.DataFrame, config: StrategyConfig) -> 
         [
             {
                 "basis": "before_costs",
-                **performance_metrics(weekly["gross_return"], config.periods_per_year, weekly["market_return"]),
+                **performance_metrics(weekly["gross_return"], config.periods_per_year, weekly["benchmark_blend_return"]),
             },
             {
                 "basis": "after_costs",
-                **performance_metrics(weekly["net_return"], config.periods_per_year, weekly["market_return"]),
+                **performance_metrics(weekly["net_return"], config.periods_per_year, weekly["benchmark_blend_return"]),
             },
         ]
     )
@@ -364,6 +438,8 @@ def performance_metrics(
             "hit_rate": np.nan,
             "average_weekly_return": np.nan,
             "jensens_alpha": np.nan,
+            "sortino_ratio": np.nan,
+            "beta": np.nan,
         }
 
     equity = (1 + returns).cumprod()
@@ -373,6 +449,10 @@ def performance_metrics(
     sharpe_ratio = np.nan
     if annualized_volatility and not np.isclose(annualized_volatility, 0):
         sharpe_ratio = annualized_return / annualized_volatility
+    downside = returns.loc[returns < 0].std(ddof=1) * np.sqrt(periods_per_year)
+    sortino_ratio = np.nan
+    if downside and not np.isclose(downside, 0):
+        sortino_ratio = annualized_return / downside
     drawdown = equity / equity.cummax() - 1
 
     return {
@@ -384,6 +464,8 @@ def performance_metrics(
         "hit_rate": float((returns > 0).mean()),
         "average_weekly_return": float(returns.mean()),
         "jensens_alpha": _jensens_alpha(returns, benchmark_returns, periods_per_year),
+        "sortino_ratio": float(sortino_ratio),
+        "beta": _beta(returns, benchmark_returns),
     }
 
 
@@ -406,6 +488,18 @@ def _jensens_alpha(
     return float(alpha * periods_per_year)
 
 
+def _beta(returns: pd.Series, benchmark_returns: pd.Series | None) -> float:
+    if benchmark_returns is None:
+        return float("nan")
+    aligned = pd.concat(
+        [returns.rename("strategy"), benchmark_returns.rename("benchmark")],
+        axis=1,
+    ).dropna()
+    if len(aligned) < 2 or np.isclose(aligned["benchmark"].var(ddof=1), 0):
+        return float("nan")
+    return float(np.cov(aligned["strategy"], aligned["benchmark"], ddof=1)[0, 1] / aligned["benchmark"].var(ddof=1))
+
+
 def validate_outputs(portfolio_rows: pd.DataFrame, weekly_returns: pd.DataFrame, performance: pd.DataFrame) -> None:
     """Run final consistency checks on strategy outputs."""
     if portfolio_rows.empty:
@@ -420,7 +514,7 @@ def validate_outputs(portfolio_rows: pd.DataFrame, weekly_returns: pd.DataFrame,
     probabilities = portfolio_rows["predicted_probability"]
     if not probabilities.between(0, 1).all():
         raise RuntimeError("Predicted probabilities must be between 0 and 1.")
-    required_return_columns = ["gross_return", "net_return", "market_return", "market_volatility"]
+    required_return_columns = ["gross_return", "net_return", "market_return", "market_volatility", "benchmark_blend_return"]
     if weekly_returns[required_return_columns].isna().any().any():
         raise RuntimeError("Weekly return output contains missing values.")
 
@@ -438,10 +532,12 @@ def run_pipeline(
     output_path.mkdir(parents=True, exist_ok=True)
 
     daily = download_daily_data(ticker_list, config.start, config.end)
+    benchmark_daily = download_daily_data(config.benchmark_tickers, config.start, config.end)
+    benchmark_weekly = build_benchmark_weekly(benchmark_daily)
     weekly_dataset = build_weekly_dataset(daily)
     model, predictions, model_metrics = train_predict(weekly_dataset, config)
     portfolio_rows = construct_portfolio(predictions, config)
-    weekly_returns, performance = backtest_portfolio(portfolio_rows, config)
+    weekly_returns, performance = backtest_portfolio(portfolio_rows, config, benchmark_weekly)
     validate_outputs(portfolio_rows, weekly_returns, performance)
 
     daily.to_csv(output_path / "daily_ohlcv.csv", index=False)
@@ -458,6 +554,7 @@ def run_pipeline(
         "weekly_returns": weekly_returns,
         "performance": performance,
         "model_metrics": model_metrics,
+        "benchmark_weekly": benchmark_weekly,
     }
 
 
@@ -483,6 +580,7 @@ def run_live_pipeline(
         random_state=base_config.random_state,
         n_jobs=base_config.n_jobs,
         model_type=base_config.model_type,
+        benchmark_tickers=base_config.benchmark_tickers,
     )
     ticker_list = list(tickers)
     validate_config(live_config, ticker_list)
@@ -490,10 +588,12 @@ def run_live_pipeline(
     output_path.mkdir(parents=True, exist_ok=True)
 
     daily = download_daily_data(ticker_list, live_config.start, live_config.end)
+    benchmark_daily = download_daily_data(live_config.benchmark_tickers, live_config.start, live_config.end)
+    benchmark_weekly = build_benchmark_weekly(benchmark_daily)
     weekly_dataset = build_weekly_dataset(daily, require_label=False)
     model, predictions, model_metrics = train_predict(weekly_dataset, live_config)
     portfolio_rows = construct_portfolio(predictions, live_config)
-    weekly_returns, performance = backtest_portfolio(portfolio_rows, live_config)
+    weekly_returns, performance = backtest_portfolio(portfolio_rows, live_config, benchmark_weekly)
     validate_outputs(portfolio_rows.dropna(subset=["next_week_return"]), weekly_returns, performance)
 
     daily.to_csv(output_path / "daily_ohlcv.csv", index=False)
@@ -510,5 +610,6 @@ def run_live_pipeline(
         "weekly_returns": weekly_returns,
         "performance": performance,
         "model_metrics": model_metrics,
+        "benchmark_weekly": benchmark_weekly,
         "as_of": run_date.isoformat(),
     }

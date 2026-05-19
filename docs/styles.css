@@ -119,7 +119,7 @@ main {
 
 .custom-controls {
   display: grid;
-  grid-template-columns: minmax(340px, 1fr) minmax(220px, 0.7fr) 90px 170px auto;
+  grid-template-columns: minmax(340px, 1fr) minmax(220px, 0.7fr) 90px 170px auto auto;
   gap: 12px;
   align-items: end;
 }
@@ -209,6 +209,12 @@ main {
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 12px 24px rgba(18, 26, 24, 0.16);
+}
+
+.custom-controls > button + button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
 }
 
 .custom-controls button:disabled {

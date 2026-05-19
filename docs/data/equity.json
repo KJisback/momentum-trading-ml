@@ -14,7 +14,14 @@
       "rollingGrossVolatility4w": 0.0,
       "marketReturn": 0.0454,
       "marketVolatility": 0.04789,
-      "previousMarketVolatility": null
+      "previousMarketVolatility": null,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-01-13",
@@ -30,7 +37,14 @@
       "rollingGrossVolatility4w": 0.02761,
       "marketReturn": 0.00885,
       "marketVolatility": 0.0432,
-      "previousMarketVolatility": 0.04789
+      "previousMarketVolatility": 0.04789,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-01-20",
@@ -46,7 +60,14 @@
       "rollingGrossVolatility4w": 0.03847,
       "marketReturn": 0.0644,
       "marketVolatility": 0.09855,
-      "previousMarketVolatility": 0.0432
+      "previousMarketVolatility": 0.0432,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-01-27",
@@ -62,7 +83,14 @@
       "rollingGrossVolatility4w": 0.0516,
       "marketReturn": 0.04388,
       "marketVolatility": 0.07201,
-      "previousMarketVolatility": 0.09855
+      "previousMarketVolatility": 0.09855,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-02-03",
@@ -78,7 +106,14 @@
       "rollingGrossVolatility4w": 0.05628,
       "marketReturn": -0.02077,
       "marketVolatility": 0.04107,
-      "previousMarketVolatility": 0.07201
+      "previousMarketVolatility": 0.07201,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-02-10",
@@ -94,7 +129,14 @@
       "rollingGrossVolatility4w": 0.05446,
       "marketReturn": 0.00211,
       "marketVolatility": 0.02147,
-      "previousMarketVolatility": 0.04107
+      "previousMarketVolatility": 0.04107,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-02-17",
@@ -110,7 +152,14 @@
       "rollingGrossVolatility4w": 0.05677,
       "marketReturn": -0.03036,
       "marketVolatility": 0.01668,
-      "previousMarketVolatility": 0.02147
+      "previousMarketVolatility": 0.02147,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-02-24",
@@ -126,7 +175,14 @@
       "rollingGrossVolatility4w": 0.03369,
       "marketReturn": 0.02651,
       "marketVolatility": 0.02692,
-      "previousMarketVolatility": 0.01668
+      "previousMarketVolatility": 0.01668,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-03-03",
@@ -142,7 +198,14 @@
       "rollingGrossVolatility4w": 0.03749,
       "marketReturn": -0.04209,
       "marketVolatility": 0.03231,
-      "previousMarketVolatility": 0.02692
+      "previousMarketVolatility": 0.02692,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-03-10",
@@ -158,7 +221,14 @@
       "rollingGrossVolatility4w": 0.03736,
       "marketReturn": 0.04268,
       "marketVolatility": 0.06337,
-      "previousMarketVolatility": 0.03231
+      "previousMarketVolatility": 0.03231,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-03-17",
@@ -174,7 +244,14 @@
       "rollingGrossVolatility4w": 0.03404,
       "marketReturn": 0.02073,
       "marketVolatility": 0.02382,
-      "previousMarketVolatility": 0.06337
+      "previousMarketVolatility": 0.06337,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-03-24",
@@ -190,7 +267,14 @@
       "rollingGrossVolatility4w": 0.02447,
       "marketReturn": 0.03228,
       "marketVolatility": 0.02717,
-      "previousMarketVolatility": 0.02382
+      "previousMarketVolatility": 0.02382,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-03-31",
@@ -206,7 +290,14 @@
       "rollingGrossVolatility4w": 0.00794,
       "marketReturn": 0.00208,
       "marketVolatility": 0.0459,
-      "previousMarketVolatility": 0.02717
+      "previousMarketVolatility": 0.02717,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-04-07",
@@ -222,7 +313,14 @@
       "rollingGrossVolatility4w": 0.00696,
       "marketReturn": 0.0169,
       "marketVolatility": 0.02941,
-      "previousMarketVolatility": 0.0459
+      "previousMarketVolatility": 0.0459,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-04-14",
@@ -238,7 +336,14 @@
       "rollingGrossVolatility4w": 0.02595,
       "marketReturn": -0.01288,
       "marketVolatility": 0.04093,
-      "previousMarketVolatility": 0.02941
+      "previousMarketVolatility": 0.02941,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-04-21",
@@ -254,7 +359,14 @@
       "rollingGrossVolatility4w": 0.02743,
       "marketReturn": 0.02291,
       "marketVolatility": 0.0458,
-      "previousMarketVolatility": 0.04093
+      "previousMarketVolatility": 0.04093,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-04-28",
@@ -270,7 +382,14 @@
       "rollingGrossVolatility4w": 0.02738,
       "marketReturn": -0.00123,
       "marketVolatility": 0.0197,
-      "previousMarketVolatility": 0.0458
+      "previousMarketVolatility": 0.0458,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-05-05",
@@ -286,7 +405,14 @@
       "rollingGrossVolatility4w": 0.02399,
       "marketReturn": 0.0104,
       "marketVolatility": 0.03993,
-      "previousMarketVolatility": 0.0197
+      "previousMarketVolatility": 0.0197,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-05-12",
@@ -302,7 +428,14 @@
       "rollingGrossVolatility4w": 0.02159,
       "marketReturn": 0.03287,
       "marketVolatility": 0.02466,
-      "previousMarketVolatility": 0.03993
+      "previousMarketVolatility": 0.03993,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-05-19",
@@ -318,7 +451,14 @@
       "rollingGrossVolatility4w": 0.01752,
       "marketReturn": 0.0132,
       "marketVolatility": 0.03976,
-      "previousMarketVolatility": 0.02466
+      "previousMarketVolatility": 0.02466,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-05-26",
@@ -334,7 +474,14 @@
       "rollingGrossVolatility4w": 0.02461,
       "marketReturn": 0.03092,
       "marketVolatility": 0.02962,
-      "previousMarketVolatility": 0.03976
+      "previousMarketVolatility": 0.03976,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-06-02",
@@ -350,7 +497,14 @@
       "rollingGrossVolatility4w": 0.02434,
       "marketReturn": 0.00803,
       "marketVolatility": 0.0502,
-      "previousMarketVolatility": 0.02962
+      "previousMarketVolatility": 0.02962,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-06-09",
@@ -366,7 +520,14 @@
       "rollingGrossVolatility4w": 0.02454,
       "marketReturn": 0.02986,
       "marketVolatility": 0.02068,
-      "previousMarketVolatility": 0.0502
+      "previousMarketVolatility": 0.0502,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-06-16",
@@ -382,7 +543,14 @@
       "rollingGrossVolatility4w": 0.0177,
       "marketReturn": -0.00079,
       "marketVolatility": 0.02014,
-      "previousMarketVolatility": 0.02068
+      "previousMarketVolatility": 0.02068,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-06-23",
@@ -398,7 +566,14 @@
       "rollingGrossVolatility4w": 0.01587,
       "marketReturn": 0.01554,
       "marketVolatility": 0.02133,
-      "previousMarketVolatility": 0.02014
+      "previousMarketVolatility": 0.02014,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-06-30",
@@ -414,7 +589,14 @@
       "rollingGrossVolatility4w": 0.00263,
       "marketReturn": -0.00155,
       "marketVolatility": 0.02193,
-      "previousMarketVolatility": 0.02133
+      "previousMarketVolatility": 0.02133,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-07-07",
@@ -430,7 +612,14 @@
       "rollingGrossVolatility4w": 0.00666,
       "marketReturn": 0.02702,
       "marketVolatility": 0.02114,
-      "previousMarketVolatility": 0.02193
+      "previousMarketVolatility": 0.02193,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-07-14",
@@ -446,7 +635,14 @@
       "rollingGrossVolatility4w": 0.02726,
       "marketReturn": -0.0102,
       "marketVolatility": 0.04202,
-      "previousMarketVolatility": 0.02114
+      "previousMarketVolatility": 0.02114,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-07-21",
@@ -462,7 +658,14 @@
       "rollingGrossVolatility4w": 0.02499,
       "marketReturn": 0.02919,
       "marketVolatility": 0.04267,
-      "previousMarketVolatility": 0.04202
+      "previousMarketVolatility": 0.04202,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-07-28",
@@ -478,7 +681,14 @@
       "rollingGrossVolatility4w": 0.02216,
       "marketReturn": -0.01951,
       "marketVolatility": 0.03633,
-      "previousMarketVolatility": 0.04267
+      "previousMarketVolatility": 0.04267,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-08-04",
@@ -494,7 +704,14 @@
       "rollingGrossVolatility4w": 0.02099,
       "marketReturn": -0.00643,
       "marketVolatility": 0.0236,
-      "previousMarketVolatility": 0.03633
+      "previousMarketVolatility": 0.03633,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-08-11",
@@ -510,7 +727,14 @@
       "rollingGrossVolatility4w": 0.0174,
       "marketReturn": -0.03244,
       "marketVolatility": 0.03252,
-      "previousMarketVolatility": 0.0236
+      "previousMarketVolatility": 0.0236,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-08-18",
@@ -526,7 +750,14 @@
       "rollingGrossVolatility4w": 0.01688,
       "marketReturn": 0.01645,
       "marketVolatility": 0.03596,
-      "previousMarketVolatility": 0.03252
+      "previousMarketVolatility": 0.03252,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-08-25",
@@ -542,7 +773,14 @@
       "rollingGrossVolatility4w": 0.01961,
       "marketReturn": 0.02292,
       "marketVolatility": 0.02645,
-      "previousMarketVolatility": 0.03596
+      "previousMarketVolatility": 0.03596,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-09-01",
@@ -558,7 +796,14 @@
       "rollingGrossVolatility4w": 0.01958,
       "marketReturn": -0.00383,
       "marketVolatility": 0.02205,
-      "previousMarketVolatility": 0.02645
+      "previousMarketVolatility": 0.02645,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-09-08",
@@ -574,7 +819,14 @@
       "rollingGrossVolatility4w": 0.01353,
       "marketReturn": 0.01335,
       "marketVolatility": 0.03641,
-      "previousMarketVolatility": 0.02205
+      "previousMarketVolatility": 0.02205,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-09-15",
@@ -590,7 +842,14 @@
       "rollingGrossVolatility4w": 0.01529,
       "marketReturn": -0.03576,
       "marketVolatility": 0.03507,
-      "previousMarketVolatility": 0.03641
+      "previousMarketVolatility": 0.03641,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-09-22",
@@ -606,7 +865,14 @@
       "rollingGrossVolatility4w": 0.01227,
       "marketReturn": -0.00931,
       "marketVolatility": 0.01645,
-      "previousMarketVolatility": 0.03507
+      "previousMarketVolatility": 0.03507,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-09-29",
@@ -622,7 +888,14 @@
       "rollingGrossVolatility4w": 0.01197,
       "marketReturn": 0.02536,
       "marketVolatility": 0.0211,
-      "previousMarketVolatility": 0.01645
+      "previousMarketVolatility": 0.01645,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-10-06",
@@ -638,7 +911,14 @@
       "rollingGrossVolatility4w": 0.01473,
       "marketReturn": 0.00059,
       "marketVolatility": 0.01541,
-      "previousMarketVolatility": 0.0211
+      "previousMarketVolatility": 0.0211,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-10-13",
@@ -654,7 +934,14 @@
       "rollingGrossVolatility4w": 0.01694,
       "marketReturn": -0.03635,
       "marketVolatility": 0.0432,
-      "previousMarketVolatility": 0.01541
+      "previousMarketVolatility": 0.01541,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-10-20",
@@ -670,7 +957,14 @@
       "rollingGrossVolatility4w": 0.01451,
       "marketReturn": -0.02857,
       "marketVolatility": 0.03375,
-      "previousMarketVolatility": 0.0432
+      "previousMarketVolatility": 0.0432,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-10-27",
@@ -686,7 +980,14 @@
       "rollingGrossVolatility4w": 0.04188,
       "marketReturn": 0.05992,
       "marketVolatility": 0.01201,
-      "previousMarketVolatility": 0.03375
+      "previousMarketVolatility": 0.03375,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-11-03",
@@ -702,7 +1003,14 @@
       "rollingGrossVolatility4w": 0.04189,
       "marketReturn": 0.01904,
       "marketVolatility": 0.02959,
-      "previousMarketVolatility": 0.01201
+      "previousMarketVolatility": 0.01201,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-11-10",
@@ -718,7 +1026,14 @@
       "rollingGrossVolatility4w": 0.03543,
       "marketReturn": 0.02649,
       "marketVolatility": 0.02511,
-      "previousMarketVolatility": 0.02959
+      "previousMarketVolatility": 0.02959,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-11-17",
@@ -734,7 +1049,14 @@
       "rollingGrossVolatility4w": 0.02504,
       "marketReturn": 0.01177,
       "marketVolatility": 0.00782,
-      "previousMarketVolatility": 0.02511
+      "previousMarketVolatility": 0.02511,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-11-24",
@@ -750,7 +1072,14 @@
       "rollingGrossVolatility4w": 0.00865,
       "marketReturn": -0.00067,
       "marketVolatility": 0.02447,
-      "previousMarketVolatility": 0.00782
+      "previousMarketVolatility": 0.00782,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-12-01",
@@ -766,7 +1095,14 @@
       "rollingGrossVolatility4w": 0.01366,
       "marketReturn": 0.00662,
       "marketVolatility": 0.01696,
-      "previousMarketVolatility": 0.02447
+      "previousMarketVolatility": 0.02447,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-12-08",
@@ -782,7 +1118,14 @@
       "rollingGrossVolatility4w": 0.01239,
       "marketReturn": 0.01116,
       "marketVolatility": 0.01869,
-      "previousMarketVolatility": 0.01696
+      "previousMarketVolatility": 0.01696,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-12-15",
@@ -798,7 +1141,14 @@
       "rollingGrossVolatility4w": 0.00703,
       "marketReturn": 0.01482,
       "marketVolatility": 0.02702,
-      "previousMarketVolatility": 0.01869
+      "previousMarketVolatility": 0.01869,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-12-22",
@@ -814,7 +1164,14 @@
       "rollingGrossVolatility4w": 0.00717,
       "marketReturn": -0.00061,
       "marketVolatility": 0.01023,
-      "previousMarketVolatility": 0.02702
+      "previousMarketVolatility": 0.02702,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2023-12-29",
@@ -830,7 +1187,14 @@
       "rollingGrossVolatility4w": 0.0027,
       "marketReturn": -0.01338,
       "marketVolatility": 0.03107,
-      "previousMarketVolatility": 0.01023
+      "previousMarketVolatility": 0.01023,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-01-05",
@@ -846,7 +1210,14 @@
       "rollingGrossVolatility4w": 0.01481,
       "marketReturn": 0.01848,
       "marketVolatility": 0.04495,
-      "previousMarketVolatility": 0.03107
+      "previousMarketVolatility": 0.03107,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-01-12",
@@ -862,7 +1233,14 @@
       "rollingGrossVolatility4w": 0.01356,
       "marketReturn": 0.01185,
       "marketVolatility": 0.01894,
-      "previousMarketVolatility": 0.04495
+      "previousMarketVolatility": 0.04495,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-01-19",
@@ -878,7 +1256,14 @@
       "rollingGrossVolatility4w": 0.01179,
       "marketReturn": 0.00105,
       "marketVolatility": 0.05237,
-      "previousMarketVolatility": 0.01894
+      "previousMarketVolatility": 0.01894,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-01-26",
@@ -894,7 +1279,14 @@
       "rollingGrossVolatility4w": 0.01295,
       "marketReturn": 0.02742,
       "marketVolatility": 0.07388,
-      "previousMarketVolatility": 0.05237
+      "previousMarketVolatility": 0.05237,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-02-02",
@@ -910,7 +1302,14 @@
       "rollingGrossVolatility4w": 0.01279,
       "marketReturn": 0.01388,
       "marketVolatility": 0.01761,
-      "previousMarketVolatility": 0.07388
+      "previousMarketVolatility": 0.07388,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-02-09",
@@ -926,7 +1325,14 @@
       "rollingGrossVolatility4w": 0.01265,
       "marketReturn": -0.00571,
       "marketVolatility": 0.03076,
-      "previousMarketVolatility": 0.01761
+      "previousMarketVolatility": 0.01761,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-02-16",
@@ -942,7 +1348,14 @@
       "rollingGrossVolatility4w": 0.01048,
       "marketReturn": 0.01646,
       "marketVolatility": 0.02195,
-      "previousMarketVolatility": 0.03076
+      "previousMarketVolatility": 0.03076,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-02-23",
@@ -958,7 +1371,14 @@
       "rollingGrossVolatility4w": 0.01029,
       "marketReturn": 0.00443,
       "marketVolatility": 0.02972,
-      "previousMarketVolatility": 0.02195
+      "previousMarketVolatility": 0.02195,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-03-01",
@@ -974,7 +1394,14 @@
       "rollingGrossVolatility4w": 0.0172,
       "marketReturn": -0.02492,
       "marketVolatility": 0.0423,
-      "previousMarketVolatility": 0.02972
+      "previousMarketVolatility": 0.02972,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-03-08",
@@ -990,7 +1417,14 @@
       "rollingGrossVolatility4w": 0.02157,
       "marketReturn": -0.00111,
       "marketVolatility": 0.03234,
-      "previousMarketVolatility": 0.0423
+      "previousMarketVolatility": 0.0423,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-03-15",
@@ -1006,7 +1440,14 @@
       "rollingGrossVolatility4w": 0.01876,
       "marketReturn": 0.02419,
       "marketVolatility": 0.02699,
-      "previousMarketVolatility": 0.03234
+      "previousMarketVolatility": 0.03234,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-03-22",
@@ -1022,7 +1463,14 @@
       "rollingGrossVolatility4w": 0.02012,
       "marketReturn": 0.00128,
       "marketVolatility": 0.02331,
-      "previousMarketVolatility": 0.02699
+      "previousMarketVolatility": 0.02699,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-03-29",
@@ -1038,7 +1486,14 @@
       "rollingGrossVolatility4w": 0.02089,
       "marketReturn": 0.00042,
       "marketVolatility": 0.03909,
-      "previousMarketVolatility": 0.02331
+      "previousMarketVolatility": 0.02331,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-04-05",
@@ -1054,7 +1509,14 @@
       "rollingGrossVolatility4w": 0.02487,
       "marketReturn": -0.00665,
       "marketVolatility": 0.03753,
-      "previousMarketVolatility": 0.03909
+      "previousMarketVolatility": 0.03909,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-04-12",
@@ -1070,7 +1532,14 @@
       "rollingGrossVolatility4w": 0.01557,
       "marketReturn": -0.04036,
       "marketVolatility": 0.04639,
-      "previousMarketVolatility": 0.03753
+      "previousMarketVolatility": 0.03753,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-04-19",
@@ -1086,7 +1555,14 @@
       "rollingGrossVolatility4w": 0.05328,
       "marketReturn": 0.02941,
       "marketVolatility": 0.06312,
-      "previousMarketVolatility": 0.04639
+      "previousMarketVolatility": 0.04639,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-04-26",
@@ -1102,7 +1578,14 @@
       "rollingGrossVolatility4w": 0.05195,
       "marketReturn": 0.01705,
       "marketVolatility": 0.03881,
-      "previousMarketVolatility": 0.06312
+      "previousMarketVolatility": 0.06312,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-05-03",
@@ -1118,7 +1601,14 @@
       "rollingGrossVolatility4w": 0.04267,
       "marketReturn": 0.01393,
       "marketVolatility": 0.03518,
-      "previousMarketVolatility": 0.03881
+      "previousMarketVolatility": 0.03881,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-05-10",
@@ -1134,7 +1624,14 @@
       "rollingGrossVolatility4w": 0.03878,
       "marketReturn": 0.0199,
       "marketVolatility": 0.02306,
-      "previousMarketVolatility": 0.03518
+      "previousMarketVolatility": 0.03518,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-05-17",
@@ -1150,7 +1647,14 @@
       "rollingGrossVolatility4w": 0.02538,
       "marketReturn": -0.00845,
       "marketVolatility": 0.02027,
-      "previousMarketVolatility": 0.02306
+      "previousMarketVolatility": 0.02306,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-05-24",
@@ -1166,7 +1670,14 @@
       "rollingGrossVolatility4w": 0.02794,
       "marketReturn": -0.00741,
       "marketVolatility": 0.01713,
-      "previousMarketVolatility": 0.02027
+      "previousMarketVolatility": 0.02027,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-05-31",
@@ -1182,7 +1693,14 @@
       "rollingGrossVolatility4w": 0.02027,
       "marketReturn": 0.01644,
       "marketVolatility": 0.02182,
-      "previousMarketVolatility": 0.01713
+      "previousMarketVolatility": 0.01713,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-06-07",
@@ -1198,7 +1716,14 @@
       "rollingGrossVolatility4w": 0.0158,
       "marketReturn": 0.00713,
       "marketVolatility": 0.03463,
-      "previousMarketVolatility": 0.02182
+      "previousMarketVolatility": 0.02182,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-06-14",
@@ -1214,7 +1739,14 @@
       "rollingGrossVolatility4w": 0.02096,
       "marketReturn": 0.01098,
       "marketVolatility": 0.01801,
-      "previousMarketVolatility": 0.03463
+      "previousMarketVolatility": 0.03463,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-06-21",
@@ -1230,7 +1762,14 @@
       "rollingGrossVolatility4w": 0.01899,
       "marketReturn": 0.01049,
       "marketVolatility": 0.03372,
-      "previousMarketVolatility": 0.01801
+      "previousMarketVolatility": 0.01801,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-06-28",
@@ -1246,7 +1785,14 @@
       "rollingGrossVolatility4w": 0.01814,
       "marketReturn": 0.0605,
       "marketVolatility": 0.07768,
-      "previousMarketVolatility": 0.03372
+      "previousMarketVolatility": 0.03372,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-07-05",
@@ -1262,7 +1808,14 @@
       "rollingGrossVolatility4w": 0.01687,
       "marketReturn": -0.01179,
       "marketVolatility": 0.0321,
-      "previousMarketVolatility": 0.07768
+      "previousMarketVolatility": 0.07768,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-07-12",
@@ -1278,7 +1831,14 @@
       "rollingGrossVolatility4w": 0.01925,
       "marketReturn": -0.01641,
       "marketVolatility": 0.03299,
-      "previousMarketVolatility": 0.0321
+      "previousMarketVolatility": 0.0321,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-07-19",
@@ -1294,7 +1854,14 @@
       "rollingGrossVolatility4w": 0.02329,
       "marketReturn": -0.01883,
       "marketVolatility": 0.03481,
-      "previousMarketVolatility": 0.03299
+      "previousMarketVolatility": 0.03299,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-07-26",
@@ -1310,7 +1877,14 @@
       "rollingGrossVolatility4w": 0.04192,
       "marketReturn": -0.01535,
       "marketVolatility": 0.04286,
-      "previousMarketVolatility": 0.03481
+      "previousMarketVolatility": 0.03481,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-08-02",
@@ -1326,7 +1900,14 @@
       "rollingGrossVolatility4w": 0.03538,
       "marketReturn": -0.00263,
       "marketVolatility": 0.02951,
-      "previousMarketVolatility": 0.04286
+      "previousMarketVolatility": 0.04286,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-08-09",
@@ -1342,7 +1923,14 @@
       "rollingGrossVolatility4w": 0.03979,
       "marketReturn": 0.03257,
       "marketVolatility": 0.02694,
-      "previousMarketVolatility": 0.02951
+      "previousMarketVolatility": 0.02951,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-08-16",
@@ -1358,7 +1946,14 @@
       "rollingGrossVolatility4w": 0.04351,
       "marketReturn": 0.01064,
       "marketVolatility": 0.01171,
-      "previousMarketVolatility": 0.02694
+      "previousMarketVolatility": 0.02694,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-08-23",
@@ -1374,7 +1969,14 @@
       "rollingGrossVolatility4w": 0.02292,
       "marketReturn": 0.00953,
       "marketVolatility": 0.02402,
-      "previousMarketVolatility": 0.01171
+      "previousMarketVolatility": 0.01171,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-08-30",
@@ -1390,7 +1992,14 @@
       "rollingGrossVolatility4w": 0.03174,
       "marketReturn": -0.03326,
       "marketVolatility": 0.02421,
-      "previousMarketVolatility": 0.02402
+      "previousMarketVolatility": 0.02402,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-09-06",
@@ -1406,7 +2015,14 @@
       "rollingGrossVolatility4w": 0.02798,
       "marketReturn": 0.03253,
       "marketVolatility": 0.0452,
-      "previousMarketVolatility": 0.02421
+      "previousMarketVolatility": 0.02421,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-09-13",
@@ -1422,7 +2038,14 @@
       "rollingGrossVolatility4w": 0.0259,
       "marketReturn": 0.02416,
       "marketVolatility": 0.02354,
-      "previousMarketVolatility": 0.0452
+      "previousMarketVolatility": 0.0452,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-09-20",
@@ -1438,7 +2061,14 @@
       "rollingGrossVolatility4w": 0.02397,
       "marketReturn": 0.00202,
       "marketVolatility": 0.03473,
-      "previousMarketVolatility": 0.02354
+      "previousMarketVolatility": 0.02354,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-09-27",
@@ -1454,7 +2084,14 @@
       "rollingGrossVolatility4w": 0.01813,
       "marketReturn": 0.0012,
       "marketVolatility": 0.02509,
-      "previousMarketVolatility": 0.03473
+      "previousMarketVolatility": 0.03473,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-10-04",
@@ -1470,7 +2107,14 @@
       "rollingGrossVolatility4w": 0.01338,
       "marketReturn": -0.00901,
       "marketVolatility": 0.04649,
-      "previousMarketVolatility": 0.02509
+      "previousMarketVolatility": 0.02509,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-10-11",
@@ -1486,7 +2130,14 @@
       "rollingGrossVolatility4w": 0.02706,
       "marketReturn": 0.01221,
       "marketVolatility": 0.01892,
-      "previousMarketVolatility": 0.04649
+      "previousMarketVolatility": 0.04649,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-10-18",
@@ -1502,7 +2153,14 @@
       "rollingGrossVolatility4w": 0.0251,
       "marketReturn": 0.01349,
       "marketVolatility": 0.07437,
-      "previousMarketVolatility": 0.01892
+      "previousMarketVolatility": 0.01892,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-10-25",
@@ -1518,7 +2176,14 @@
       "rollingGrossVolatility4w": 0.02799,
       "marketReturn": -0.00477,
       "marketVolatility": 0.03928,
-      "previousMarketVolatility": 0.07437
+      "previousMarketVolatility": 0.07437,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-11-01",
@@ -1534,7 +2199,14 @@
       "rollingGrossVolatility4w": 0.028,
       "marketReturn": 0.05889,
       "marketVolatility": 0.08535,
-      "previousMarketVolatility": 0.03928
+      "previousMarketVolatility": 0.03928,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-11-08",
@@ -1550,7 +2222,14 @@
       "rollingGrossVolatility4w": 0.01334,
       "marketReturn": -0.00993,
       "marketVolatility": 0.02664,
-      "previousMarketVolatility": 0.08535
+      "previousMarketVolatility": 0.08535,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-11-15",
@@ -1566,7 +2245,14 @@
       "rollingGrossVolatility4w": 0.01516,
       "marketReturn": 0.01001,
       "marketVolatility": 0.03743,
-      "previousMarketVolatility": 0.02664
+      "previousMarketVolatility": 0.02664,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-11-22",
@@ -1582,7 +2268,14 @@
       "rollingGrossVolatility4w": 0.00956,
       "marketReturn": 0.0176,
       "marketVolatility": 0.01982,
-      "previousMarketVolatility": 0.03743
+      "previousMarketVolatility": 0.03743,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-11-29",
@@ -1598,7 +2291,14 @@
       "rollingGrossVolatility4w": 0.02222,
       "marketReturn": 0.03256,
       "marketVolatility": 0.0556,
-      "previousMarketVolatility": 0.01982
+      "previousMarketVolatility": 0.01982,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-12-06",
@@ -1614,7 +2314,14 @@
       "rollingGrossVolatility4w": 0.02604,
       "marketReturn": 0.01722,
       "marketVolatility": 0.04942,
-      "previousMarketVolatility": 0.0556
+      "previousMarketVolatility": 0.0556,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-12-13",
@@ -1630,7 +2337,14 @@
       "rollingGrossVolatility4w": 0.02889,
       "marketReturn": -0.01169,
       "marketVolatility": 0.0233,
-      "previousMarketVolatility": 0.04942
+      "previousMarketVolatility": 0.04942,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-12-20",
@@ -1646,7 +2360,14 @@
       "rollingGrossVolatility4w": 0.02305,
       "marketReturn": 0.00717,
       "marketVolatility": 0.01217,
-      "previousMarketVolatility": 0.0233
+      "previousMarketVolatility": 0.0233,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2024-12-27",
@@ -1662,7 +2383,14 @@
       "rollingGrossVolatility4w": 0.02382,
       "marketReturn": -0.01241,
       "marketVolatility": 0.02063,
-      "previousMarketVolatility": 0.01217
+      "previousMarketVolatility": 0.01217,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-01-03",
@@ -1678,7 +2406,14 @@
       "rollingGrossVolatility4w": 0.01456,
       "marketReturn": -0.01495,
       "marketVolatility": 0.01614,
-      "previousMarketVolatility": 0.02063
+      "previousMarketVolatility": 0.02063,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-01-10",
@@ -1694,7 +2429,14 @@
       "rollingGrossVolatility4w": 0.0336,
       "marketReturn": 0.03343,
       "marketVolatility": 0.03439,
-      "previousMarketVolatility": 0.01614
+      "previousMarketVolatility": 0.01614,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-01-17",
@@ -1710,7 +2452,14 @@
       "rollingGrossVolatility4w": 0.03544,
       "marketReturn": 0.0118,
       "marketVolatility": 0.03317,
-      "previousMarketVolatility": 0.03439
+      "previousMarketVolatility": 0.03439,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-01-24",
@@ -1726,7 +2475,14 @@
       "rollingGrossVolatility4w": 0.03249,
       "marketReturn": 0.01772,
       "marketVolatility": 0.03667,
-      "previousMarketVolatility": 0.03317
+      "previousMarketVolatility": 0.03317,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-01-31",
@@ -1742,7 +2498,14 @@
       "rollingGrossVolatility4w": 0.01502,
       "marketReturn": -0.01801,
       "marketVolatility": 0.04938,
-      "previousMarketVolatility": 0.03667
+      "previousMarketVolatility": 0.03667,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-02-07",
@@ -1758,7 +2521,14 @@
       "rollingGrossVolatility4w": 0.01561,
       "marketReturn": 0.01404,
       "marketVolatility": 0.0257,
-      "previousMarketVolatility": 0.04938
+      "previousMarketVolatility": 0.04938,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-02-14",
@@ -1774,7 +2544,14 @@
       "rollingGrossVolatility4w": 0.02115,
       "marketReturn": -0.02141,
       "marketVolatility": 0.0356,
-      "previousMarketVolatility": 0.0257
+      "previousMarketVolatility": 0.0257,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-02-21",
@@ -1790,7 +2567,14 @@
       "rollingGrossVolatility4w": 0.03,
       "marketReturn": -0.01375,
       "marketVolatility": 0.05541,
-      "previousMarketVolatility": 0.0356
+      "previousMarketVolatility": 0.0356,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-02-28",
@@ -1806,7 +2590,14 @@
       "rollingGrossVolatility4w": 0.04674,
       "marketReturn": -0.0386,
       "marketVolatility": 0.04094,
-      "previousMarketVolatility": 0.05541
+      "previousMarketVolatility": 0.05541,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-03-07",
@@ -1822,7 +2613,14 @@
       "rollingGrossVolatility4w": 0.04847,
       "marketReturn": -0.03137,
       "marketVolatility": 0.037,
-      "previousMarketVolatility": 0.04094
+      "previousMarketVolatility": 0.04094,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-03-14",
@@ -1838,7 +2636,14 @@
       "rollingGrossVolatility4w": 0.04876,
       "marketReturn": 0.00581,
       "marketVolatility": 0.01723,
-      "previousMarketVolatility": 0.037
+      "previousMarketVolatility": 0.037,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-03-21",
@@ -1854,7 +2659,14 @@
       "rollingGrossVolatility4w": 0.02429,
       "marketReturn": -0.00479,
       "marketVolatility": 0.03293,
-      "previousMarketVolatility": 0.01723
+      "previousMarketVolatility": 0.01723,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-03-28",
@@ -1870,7 +2682,14 @@
       "rollingGrossVolatility4w": 0.02456,
       "marketReturn": -0.09129,
       "marketVolatility": 0.03242,
-      "previousMarketVolatility": 0.03293
+      "previousMarketVolatility": 0.03293,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-04-04",
@@ -1886,7 +2705,14 @@
       "rollingGrossVolatility4w": 0.05695,
       "marketReturn": 0.06626,
       "marketVolatility": 0.03351,
-      "previousMarketVolatility": 0.03242
+      "previousMarketVolatility": 0.03242,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-04-11",
@@ -1902,7 +2728,14 @@
       "rollingGrossVolatility4w": 0.05881,
       "marketReturn": -0.0287,
       "marketVolatility": 0.03393,
-      "previousMarketVolatility": 0.03351
+      "previousMarketVolatility": 0.03351,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-04-18",
@@ -1918,7 +2751,14 @@
       "rollingGrossVolatility4w": 0.09028,
       "marketReturn": 0.06392,
       "marketVolatility": 0.05385,
-      "previousMarketVolatility": 0.03393
+      "previousMarketVolatility": 0.03393,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-04-25",
@@ -1934,7 +2774,14 @@
       "rollingGrossVolatility4w": 0.07476,
       "marketReturn": 0.03094,
       "marketVolatility": 0.0404,
-      "previousMarketVolatility": 0.05385
+      "previousMarketVolatility": 0.05385,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-05-02",
@@ -1950,7 +2797,14 @@
       "rollingGrossVolatility4w": 0.07442,
       "marketReturn": -0.00909,
       "marketVolatility": 0.03258,
-      "previousMarketVolatility": 0.0404
+      "previousMarketVolatility": 0.0404,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-05-09",
@@ -1966,7 +2820,14 @@
       "rollingGrossVolatility4w": 0.0725,
       "marketReturn": 0.05869,
       "marketVolatility": 0.05251,
-      "previousMarketVolatility": 0.03258
+      "previousMarketVolatility": 0.03258,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-05-16",
@@ -1982,7 +2843,14 @@
       "rollingGrossVolatility4w": 0.05458,
       "marketReturn": -0.02123,
       "marketVolatility": 0.02487,
-      "previousMarketVolatility": 0.05251
+      "previousMarketVolatility": 0.05251,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-05-23",
@@ -1998,7 +2866,14 @@
       "rollingGrossVolatility4w": 0.05208,
       "marketReturn": 0.02143,
       "marketVolatility": 0.00952,
-      "previousMarketVolatility": 0.02487
+      "previousMarketVolatility": 0.02487,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-05-30",
@@ -2014,7 +2889,14 @@
       "rollingGrossVolatility4w": 0.04905,
       "marketReturn": 0.0018,
       "marketVolatility": 0.05885,
-      "previousMarketVolatility": 0.00952
+      "previousMarketVolatility": 0.00952,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-06-06",
@@ -2030,7 +2912,14 @@
       "rollingGrossVolatility4w": 0.02698,
       "marketReturn": 0.00055,
       "marketVolatility": 0.04078,
-      "previousMarketVolatility": 0.05885
+      "previousMarketVolatility": 0.05885,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-06-13",
@@ -2046,7 +2935,14 @@
       "rollingGrossVolatility4w": 0.03378,
       "marketReturn": -0.00933,
       "marketVolatility": 0.02848,
-      "previousMarketVolatility": 0.04078
+      "previousMarketVolatility": 0.04078,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-06-20",
@@ -2062,7 +2958,14 @@
       "rollingGrossVolatility4w": 0.03568,
       "marketReturn": 0.03481,
       "marketVolatility": 0.02885,
-      "previousMarketVolatility": 0.02848
+      "previousMarketVolatility": 0.02848,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-06-27",
@@ -2078,7 +2981,14 @@
       "rollingGrossVolatility4w": 0.03674,
       "marketReturn": 0.0116,
       "marketVolatility": 0.02653,
-      "previousMarketVolatility": 0.02885
+      "previousMarketVolatility": 0.02885,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-07-04",
@@ -2094,7 +3004,14 @@
       "rollingGrossVolatility4w": 0.02716,
       "marketReturn": -0.00737,
       "marketVolatility": 0.01504,
-      "previousMarketVolatility": 0.02653
+      "previousMarketVolatility": 0.02653,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-07-11",
@@ -2110,7 +3027,14 @@
       "rollingGrossVolatility4w": 0.02081,
       "marketReturn": 0.01361,
       "marketVolatility": 0.02164,
-      "previousMarketVolatility": 0.01504
+      "previousMarketVolatility": 0.01504,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-07-18",
@@ -2126,7 +3050,14 @@
       "rollingGrossVolatility4w": 0.008,
       "marketReturn": 0.01559,
       "marketVolatility": 0.02242,
-      "previousMarketVolatility": 0.02164
+      "previousMarketVolatility": 0.02164,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-07-25",
@@ -2142,7 +3073,14 @@
       "rollingGrossVolatility4w": 0.00848,
       "marketReturn": -0.02262,
       "marketVolatility": 0.03706,
-      "previousMarketVolatility": 0.02242
+      "previousMarketVolatility": 0.02242,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-08-01",
@@ -2158,7 +3096,14 @@
       "rollingGrossVolatility4w": 0.01022,
       "marketReturn": 0.03567,
       "marketVolatility": 0.04815,
-      "previousMarketVolatility": 0.03706
+      "previousMarketVolatility": 0.03706,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-08-08",
@@ -2174,7 +3119,14 @@
       "rollingGrossVolatility4w": 0.01121,
       "marketReturn": 0.01556,
       "marketVolatility": 0.01225,
-      "previousMarketVolatility": 0.04815
+      "previousMarketVolatility": 0.04815,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-08-15",
@@ -2190,7 +3142,14 @@
       "rollingGrossVolatility4w": 0.00853,
       "marketReturn": 0.0027,
       "marketVolatility": 0.02299,
-      "previousMarketVolatility": 0.01225
+      "previousMarketVolatility": 0.01225,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-08-22",
@@ -2206,7 +3165,14 @@
       "rollingGrossVolatility4w": 0.00947,
       "marketReturn": 0.00591,
       "marketVolatility": 0.01846,
-      "previousMarketVolatility": 0.02299
+      "previousMarketVolatility": 0.02299,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-08-29",
@@ -2222,7 +3188,14 @@
       "rollingGrossVolatility4w": 0.00866,
       "marketReturn": 0.01502,
       "marketVolatility": 0.04009,
-      "previousMarketVolatility": 0.01846
+      "previousMarketVolatility": 0.01846,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-09-05",
@@ -2238,7 +3211,14 @@
       "rollingGrossVolatility4w": 0.00967,
       "marketReturn": 0.01644,
       "marketVolatility": 0.04516,
-      "previousMarketVolatility": 0.04009
+      "previousMarketVolatility": 0.04009,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-09-12",
@@ -2254,7 +3234,14 @@
       "rollingGrossVolatility4w": 0.01324,
       "marketReturn": 0.0263,
       "marketVolatility": 0.02745,
-      "previousMarketVolatility": 0.04516
+      "previousMarketVolatility": 0.04516,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-09-19",
@@ -2270,7 +3257,14 @@
       "rollingGrossVolatility4w": 0.01546,
       "marketReturn": -0.00386,
       "marketVolatility": 0.03175,
-      "previousMarketVolatility": 0.02745
+      "previousMarketVolatility": 0.02745,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-09-26",
@@ -2286,7 +3280,14 @@
       "rollingGrossVolatility4w": 0.01243,
       "marketReturn": 0.00119,
       "marketVolatility": 0.02792,
-      "previousMarketVolatility": 0.03175
+      "previousMarketVolatility": 0.03175,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-10-03",
@@ -2302,7 +3303,14 @@
       "rollingGrossVolatility4w": 0.01787,
       "marketReturn": -0.0208,
       "marketVolatility": 0.01723,
-      "previousMarketVolatility": 0.02792
+      "previousMarketVolatility": 0.02792,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-10-10",
@@ -2318,7 +3326,14 @@
       "rollingGrossVolatility4w": 0.01271,
       "marketReturn": 0.01716,
       "marketVolatility": 0.0292,
-      "previousMarketVolatility": 0.01723
+      "previousMarketVolatility": 0.01723,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-10-17",
@@ -2334,7 +3349,14 @@
       "rollingGrossVolatility4w": 0.0128,
       "marketReturn": 0.01675,
       "marketVolatility": 0.02204,
-      "previousMarketVolatility": 0.0292
+      "previousMarketVolatility": 0.0292,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-10-24",
@@ -2350,7 +3372,14 @@
       "rollingGrossVolatility4w": 0.00988,
       "marketReturn": 0.00983,
       "marketVolatility": 0.06222,
-      "previousMarketVolatility": 0.02204
+      "previousMarketVolatility": 0.02204,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-10-31",
@@ -2366,7 +3395,14 @@
       "rollingGrossVolatility4w": 0.00874,
       "marketReturn": -0.01265,
       "marketVolatility": 0.02949,
-      "previousMarketVolatility": 0.06222
+      "previousMarketVolatility": 0.06222,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-11-07",
@@ -2382,7 +3418,14 @@
       "rollingGrossVolatility4w": 0.01312,
       "marketReturn": -0.00639,
       "marketVolatility": 0.03389,
-      "previousMarketVolatility": 0.02949
+      "previousMarketVolatility": 0.02949,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-11-14",
@@ -2398,7 +3441,14 @@
       "rollingGrossVolatility4w": 0.02151,
       "marketReturn": -0.01031,
       "marketVolatility": 0.0456,
-      "previousMarketVolatility": 0.03389
+      "previousMarketVolatility": 0.03389,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-11-21",
@@ -2414,7 +3464,14 @@
       "rollingGrossVolatility4w": 0.02637,
       "marketReturn": 0.04957,
       "marketVolatility": 0.02939,
-      "previousMarketVolatility": 0.0456
+      "previousMarketVolatility": 0.0456,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-11-28",
@@ -2430,7 +3487,14 @@
       "rollingGrossVolatility4w": 0.02536,
       "marketReturn": 0.00205,
       "marketVolatility": 0.02682,
-      "previousMarketVolatility": 0.02939
+      "previousMarketVolatility": 0.02939,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-12-05",
@@ -2446,7 +3510,14 @@
       "rollingGrossVolatility4w": 0.02606,
       "marketReturn": 0.00021,
       "marketVolatility": 0.03093,
-      "previousMarketVolatility": 0.02682
+      "previousMarketVolatility": 0.02682,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-12-12",
@@ -2462,7 +3533,14 @@
       "rollingGrossVolatility4w": 0.01787,
       "marketReturn": 0.00343,
       "marketVolatility": 0.02136,
-      "previousMarketVolatility": 0.03093
+      "previousMarketVolatility": 0.03093,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-12-19",
@@ -2478,7 +3556,14 @@
       "rollingGrossVolatility4w": 0.01408,
       "marketReturn": 0.01044,
       "marketVolatility": 0.01323,
-      "previousMarketVolatility": 0.02136
+      "previousMarketVolatility": 0.02136,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     },
     {
       "week": "2025-12-26",
@@ -2494,7 +3579,14 @@
       "rollingGrossVolatility4w": 0.01373,
       "marketReturn": -0.01054,
       "marketVolatility": 0.01659,
-      "previousMarketVolatility": 0.01323
+      "previousMarketVolatility": 0.01323,
+      "benchmarkReturn": null,
+      "benchmarkEquity": null,
+      "sp500Equity": null,
+      "nasdaqEquity": null,
+      "dowEquity": null,
+      "niftyEquity": null,
+      "sensexEquity": null
     }
   ]
 }
