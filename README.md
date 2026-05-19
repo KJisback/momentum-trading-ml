@@ -119,6 +119,22 @@ Useful API endpoints:
 - `GET /api/predictions`
 - `GET /api/downloads/weekly_stock_predictions.csv`
 
+## Public Deployment
+
+The public dashboard is exported to `docs/` and deployed through GitHub Pages.
+
+Refresh the static build before publishing:
+
+```powershell
+py -3.11 export_static_site.py
+```
+
+Expected public URL:
+
+```text
+https://kjisback.github.io/momentum-trading-ml/
+```
+
 Dashboard QOL features:
 
 - Interactive chart modes for equity, weekly returns, drawdown, and rolling risk

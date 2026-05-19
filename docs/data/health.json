@@ -1,0 +1,9 @@
+{
+  "status": "ok",
+  "files": {
+    "performance_metrics.csv": true,
+    "weekly_stock_predictions.csv": true,
+    "weekly_portfolio_returns.csv": true,
+    "weekly_features.csv": true
+  }
+}

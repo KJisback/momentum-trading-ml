@@ -20,6 +20,7 @@ app = FastAPI(
     description="Human-readable dashboard API for the ML momentum strategy.",
 )
 app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
+app.mount("/data", StaticFiles(directory=PROJECT_ROOT / "docs" / "data", check_dir=False), name="data")
 
 
 def read_output_csv(name: str) -> pd.DataFrame:
