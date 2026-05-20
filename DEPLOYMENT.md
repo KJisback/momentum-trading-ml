@@ -16,6 +16,12 @@ https://kjisback-momentum-trading-ml.hf.space/api/health
 
 If Hugging Face gives a different Space URL, update `web/config.js`, run `py -3.11 export_static_site.py`, then commit and push.
 
+## Why Not Railway
+
+Railway is a good developer experience, but it is not the best default for this project because the backend is meant to stay as close to free as possible. Railway's free access is trial/credit based, then the practical path is a paid Hobby plan. This app has no database, no persistent worker, and no paid infrastructure need beyond a small Docker FastAPI process, so Hugging Face Docker Spaces is a better first deployment target.
+
+Use Railway later if Hugging Face Spaces cannot handle the Python dependency size or yfinance request latency.
+
 ## Frontend on GitHub Pages
 
 The static frontend reads its backend URL from:
