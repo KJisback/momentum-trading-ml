@@ -11,6 +11,8 @@ app_port: 7860
 
 FastAPI backend for the Momentum Trading ML dashboard.
 
+This Docker Space uses the lightweight `requirements-api.txt` dependency set.
+
 Health check:
 
 ```text

@@ -21,6 +21,7 @@ Visibility: Public
 4. Push this repository's files to the Space repository, or connect/import from GitHub if available.
 
 The Dockerfile runs FastAPI on port `7860`, which is the standard Docker Spaces port.
+It installs `requirements-api.txt`, not the full notebook/dev requirements, to keep the free Space build smaller.
 
 ## Space README Metadata
 
@@ -48,6 +49,8 @@ ALLOWED_ORIGINS=https://kjisback.github.io,http://127.0.0.1:8010,http://127.0.0.
 DEFAULT_ALERT_TICKERS=AAPL,MSFT,GOOGL,AMZN,META
 DEFAULT_ALERT_MODEL=hist_gradient_boosting
 ```
+
+XGBoost is intentionally not installed in the Space image by default. It remains a local/paid-deployment option because it can make free Space builds too large or slow.
 
 Email alerts:
 
