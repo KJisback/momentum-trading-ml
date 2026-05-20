@@ -1,6 +1,6 @@
 ---
 title: Momentum Trading ML API
-emoji: chart_with_upwards_trend
+emoji: 📈
 colorFrom: green
 colorTo: blue
 sdk: docker
