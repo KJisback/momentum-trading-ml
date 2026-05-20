@@ -6,3 +6,8 @@ services:
       - "8010:8010"
     volumes:
       - ./outputs:/app/outputs
+      - ./data:/app/data
+    environment:
+      - JWT_SECRET=change-me-in-production
+      - ADMIN_ACCESS_CODE=admin-local
+      - ALLOWED_ORIGINS=http://127.0.0.1:8010,http://localhost:8010

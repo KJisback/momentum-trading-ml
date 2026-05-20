@@ -1,5 +1,6 @@
 const dollars = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 });
 const defaultWatchlist = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "JPM", "V", "JNJ", "BRK.B"];
+const browserStorage = typeof localStorage === "undefined" ? null : localStorage;
 
 const page = {
   chartRows: [],
@@ -9,6 +10,13 @@ const page = {
   range: "all",
   hover: null,
   watchlist: [...defaultWatchlist],
+  holdings: [
+    { symbol: "MSFT", allocation: 100, purchaseDate: "2025-06-11", assetType: "stock" },
+    { symbol: "SPY", allocation: 100, purchaseDate: "2025-06-11", assetType: "etf" },
+  ],
+  user: null,
+  token: browserStorage?.getItem("momentumToken") || "",
+  lastScenario: null,
   lastRequest: null,
 };
 
@@ -37,6 +45,14 @@ const chartBook = {
 
 async function getJson(url) {
   const reply = await fetch(runningStatic ? apiFiles[url] : `${apiBase}${url}`);
+  return readJsonResponse(reply, `Request failed: ${url}`);
+}
+
+async function apiFetch(url, options = {}) {
+  const headers = { ...(options.headers || {}) };
+  if (!headers["Content-Type"] && options.body) headers["Content-Type"] = "application/json";
+  if (page.token) headers.Authorization = `Bearer ${page.token}`;
+  const reply = await fetch(`${apiBase}${url}`, { ...options, headers });
   return readJsonResponse(reply, `Request failed: ${url}`);
 }
 
@@ -75,6 +91,216 @@ function setDownloadLinks() {
 function setCustomNote(message, kind = "") {
   $("customNote").textContent = message;
   $("customNote").className = `custom-note ${kind}`.trim();
+}
+
+function setScenarioNote(message, kind = "") {
+  $("scenarioNote").textContent = message;
+  $("scenarioNote").className = `custom-note ${kind}`.trim();
+}
+
+function money(value, currency = "USD") {
+  return new Intl.NumberFormat("en-US", { style: "currency", currency, maximumFractionDigits: 2 }).format(value || 0);
+}
+
+function authPayload() {
+  return {
+    email: $("authEmail").value,
+    name: $("authName").value || "Portfolio analyst",
+    adminAccessCode: $("adminCode").value || null,
+  };
+}
+
+async function signIn() {
+  try {
+    const data = await apiFetch("/api/auth/google", {
+      method: "POST",
+      body: JSON.stringify(authPayload()),
+    });
+    page.token = data.token;
+    page.user = data.user;
+    browserStorage?.setItem("momentumToken", data.token);
+    renderAuth();
+    setScenarioNote(`Signed in as ${data.user.email}. Saved portfolios are enabled.`, "ready");
+  } catch (error) {
+    setScenarioNote(error.message, "error");
+  }
+}
+
+async function restoreSession() {
+  if (!page.token) return renderAuth();
+  try {
+    const data = await apiFetch("/api/me");
+    page.user = data.user;
+  } catch {
+    page.token = "";
+    browserStorage?.removeItem("momentumToken");
+  }
+  renderAuth();
+}
+
+function renderAuth() {
+  const signedIn = Boolean(page.user);
+  $("authTitle").textContent = signedIn ? `${page.user.name} - ${page.user.role}` : "Save portfolios and scenario history";
+  $("signInButton").textContent = signedIn ? "Switch user" : "Sign in";
+  $("savePortfolioButton").disabled = !signedIn;
+}
+
+function wireAuth() {
+  $("signInButton").onclick = signIn;
+  $("themeToggle").onclick = () => {
+    document.body.classList.toggle("terminal-mode");
+    $("themeToggle").textContent = document.body.classList.contains("terminal-mode") ? "Dashboard" : "Terminal";
+  };
+}
+
+function renderHoldingRows() {
+  $("holdingRows").innerHTML = page.holdings.map((holding, index) => `
+    <div class="holding-row">
+      <label>Symbol<input data-holding="${index}" data-field="symbol" value="${holding.symbol}" placeholder="MSFT or ^NSEI" /></label>
+      <label>Amount<input data-holding="${index}" data-field="allocation" type="number" min="1" step="1" value="${holding.allocation}" /></label>
+      <label>Buy date<input data-holding="${index}" data-field="purchaseDate" type="date" value="${holding.purchaseDate}" /></label>
+      <label>Type<select data-holding="${index}" data-field="assetType">
+        ${["stock", "etf", "index", "crypto", "listing"].map((type) => `<option value="${type}" ${holding.assetType === type ? "selected" : ""}>${type}</option>`).join("")}
+      </select></label>
+      <button type="button" title="Remove holding" data-remove-holding="${index}">x</button>
+    </div>
+  `).join("");
+  document.querySelectorAll("[data-holding]").forEach((input) => {
+    input.oninput = () => {
+      const index = Number(input.dataset.holding);
+      const field = input.dataset.field;
+      page.holdings[index][field] = field === "allocation" ? Number(input.value) : input.value;
+    };
+  });
+  document.querySelectorAll("[data-remove-holding]").forEach((button) => {
+    button.onclick = () => {
+      page.holdings.splice(Number(button.dataset.removeHolding), 1);
+      if (!page.holdings.length) page.holdings.push({ symbol: "MSFT", allocation: 100, purchaseDate: "2025-06-11", assetType: "stock" });
+      renderHoldingRows();
+    };
+  });
+}
+
+function scenarioRequest(save = false) {
+  return {
+    name: $("scenarioName").value || "Investment scenario",
+    baseCurrency: "USD",
+    holdings: page.holdings.map((holding) => ({
+      symbol: cleanTickerInput(holding.symbol),
+      allocation: Number(holding.allocation),
+      purchaseDate: holding.purchaseDate,
+      assetType: holding.assetType || "stock",
+    })),
+    forecastHorizonWeeks: Number($("scenarioHorizon").value || 26),
+    save,
+  };
+}
+
+async function runScenario(save = false) {
+  $("runScenarioButton").disabled = true;
+  setScenarioNote("Fetching adjusted close prices and building the scenario...", "ready");
+  try {
+    const data = await apiFetch("/api/scenarios", {
+      method: "POST",
+      body: JSON.stringify(scenarioRequest(save)),
+    });
+    page.lastScenario = data;
+    fillScenario(data);
+    setScenarioNote(save && data.scenarioId ? "Scenario saved to your history." : "Scenario calculated from live Yahoo Finance data.", "ready");
+  } catch (error) {
+    setScenarioNote(error.message, "error");
+  } finally {
+    $("runScenarioButton").disabled = false;
+  }
+}
+
+async function savePortfolio() {
+  try {
+    const reply = await apiFetch("/api/portfolios", {
+      method: "POST",
+      body: JSON.stringify({
+        name: $("scenarioName").value || "Saved portfolio",
+        baseCurrency: "USD",
+        holdings: scenarioRequest(false).holdings,
+      }),
+    });
+    setScenarioNote(`Saved portfolio "${reply.name}" with ${reply.holdings.length} holdings.`, "ready");
+  } catch (error) {
+    setScenarioNote(error.message, "error");
+  }
+}
+
+function wireScenarioBuilder() {
+  renderHoldingRows();
+  $("addHoldingButton").onclick = () => {
+    page.holdings.push({ symbol: "AAPL", allocation: 100, purchaseDate: "2025-06-11", assetType: "stock" });
+    renderHoldingRows();
+  };
+  $("runScenarioButton").onclick = () => runScenario(false);
+  $("savePortfolioButton").onclick = savePortfolio;
+}
+
+function fillScenario(data) {
+  $("scenarioResults").hidden = false;
+  const currency = data.baseCurrency || "USD";
+  put("scenarioInvested", money(data.summary.invested, currency));
+  put("scenarioCurrent", money(data.summary.currentValue, currency));
+  put("scenarioGain", money(data.summary.gain, currency));
+  put("scenarioReturn", data.summary.totalReturn);
+  put("scenarioForecast", `${money(data.summary.forecastLower, currency)} - ${money(data.summary.forecastUpper, currency)}`);
+  $("scenarioHoldingRows").innerHTML = data.holdings.map((row) => `
+    <tr>
+      <td>${row.symbol}</td>
+      <td>${row.entryDate}<br>${money(row.entryPrice, currency)}</td>
+      <td>${row.shares}</td>
+      <td>${row.currentDate}<br>${money(row.currentPrice, currency)}</td>
+      <td>${money(row.currentValue, currency)}</td>
+      <td class="${row.gain >= 0 ? "yes" : "no"}">${row.totalReturn}</td>
+      <td>${row.cagr}</td>
+    </tr>
+  `).join("");
+  drawScenarioChart(data);
+}
+
+function drawScenarioChart(data) {
+  const canvas = $("scenarioChart");
+  const ctx = canvas.getContext("2d");
+  const rect = canvas.getBoundingClientRect();
+  const scale = window.devicePixelRatio || 1;
+  const width = rect.width;
+  const height = 280;
+  const pad = { top: 20, right: 20, bottom: 30, left: 64 };
+  const history = data.history.map((row) => ({ date: row.date, value: row.value, lower: row.value, upper: row.value }));
+  const forecast = data.forecast.map((row) => ({ date: row.week, value: row.expected, lower: row.lower, upper: row.upper }));
+  const rows = [...history.slice(-260), ...forecast];
+  const values = rows.flatMap((row) => [row.value, row.lower, row.upper]).filter(Number.isFinite);
+  const min = Math.min(...values) * 0.96;
+  const max = Math.max(...values) * 1.04;
+  const x = (i) => pad.left + i * ((width - pad.left - pad.right) / Math.max(rows.length - 1, 1));
+  const y = (n) => pad.top + (max - n) * ((height - pad.top - pad.bottom) / (max - min || 1));
+  canvas.width = Math.floor(width * scale);
+  canvas.height = Math.floor(height * scale);
+  ctx.scale(scale, scale);
+  ctx.clearRect(0, 0, width, height);
+  drawGrid(ctx, width, height, pad);
+  ctx.strokeStyle = "#16845b";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  rows.forEach((row, i) => i ? ctx.lineTo(x(i), y(row.value)) : ctx.moveTo(x(i), y(row.value)));
+  ctx.stroke();
+  if (forecast.length) {
+    const start = history.slice(-260).length;
+    ctx.fillStyle = "rgba(46, 100, 216, 0.13)";
+    ctx.beginPath();
+    forecast.forEach((row, i) => i ? ctx.lineTo(x(start + i), y(row.upper)) : ctx.moveTo(x(start + i), y(row.upper)));
+    [...forecast].reverse().forEach((row, i) => ctx.lineTo(x(start + forecast.length - 1 - i), y(row.lower)));
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.fillStyle = "#65736f";
+  ctx.font = "12px system-ui";
+  ctx.fillText(money(max, data.baseCurrency), 4, pad.top + 4);
+  ctx.fillText(money(min, data.baseCurrency), 4, height - pad.bottom);
 }
 
 function cleanTickerInput(value) {
@@ -468,6 +694,9 @@ function rankRow(row) {
 
 async function start() {
   setDownloadLinks();
+  wireAuth();
+  await restoreSession();
+  wireScenarioBuilder();
   wireCustomRun();
   wireChart();
   const health = await getJson("/api/health");
@@ -486,6 +715,9 @@ async function start() {
 }
 
 window.addEventListener("resize", drawChart);
+window.addEventListener("resize", () => {
+  if (page.lastScenario) drawScenarioChart(page.lastScenario);
+});
 start().catch((error) => {
   console.error(error);
   $("healthStatus").textContent = "Dashboard needs outputs";

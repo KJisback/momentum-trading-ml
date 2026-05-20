@@ -10,13 +10,88 @@
     <header class="app-header">
       <div>
         <p class="eyebrow">Momentum Strategy Desk</p>
-        <h1>Strategy health at a glance</h1>
-        <p class="header-copy">Weekly ranking, realized performance, and risk signals for the long-only momentum system.</p>
+        <h1>Portfolio value, backtests, and ML forecasts</h1>
+        <p class="header-copy">Enter stocks, ETFs, indexes, or global Yahoo symbols, then model past value and future ranges from the same momentum engine.</p>
       </div>
-      <div class="status-pill" id="healthStatus">Checking outputs</div>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" type="button">Terminal</button>
+        <div class="status-pill" id="healthStatus">Checking outputs</div>
+      </div>
     </header>
 
     <main>
+      <section class="auth-strip">
+        <div>
+          <p class="eyebrow">Google sign-in ready</p>
+          <h2 id="authTitle">Save portfolios and scenario history</h2>
+        </div>
+        <div class="auth-controls">
+          <input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email" />
+          <input id="authName" placeholder="Name" autocomplete="name" />
+          <input id="adminCode" placeholder="Admin code" />
+          <button id="signInButton" type="button">Sign in</button>
+        </div>
+      </section>
+
+      <section class="scenario-panel">
+        <div class="scenario-head">
+          <div>
+            <p class="eyebrow">Portfolio value input</p>
+            <h2>Model “what if I invested?” scenarios</h2>
+            <p class="custom-note" id="scenarioNote">Example: $100 in MSFT on 2025-06-11 through today, then forecast the next 26 weeks.</p>
+          </div>
+          <div class="scenario-actions">
+            <label>
+              Scenario name
+              <input id="scenarioName" value="My momentum portfolio" maxlength="120" />
+            </label>
+            <label>
+              Horizon
+              <select id="scenarioHorizon">
+                <option value="13">13 weeks</option>
+                <option value="26" selected>26 weeks</option>
+                <option value="52">52 weeks</option>
+                <option value="104">104 weeks</option>
+              </select>
+            </label>
+            <button id="addHoldingButton" class="secondary-button" type="button">Add row</button>
+            <button id="runScenarioButton" type="button">Calculate value</button>
+            <button id="savePortfolioButton" type="button" disabled>Save portfolio</button>
+          </div>
+        </div>
+        <div class="holding-grid" id="holdingRows"></div>
+        <div class="scenario-results" id="scenarioResults" hidden>
+          <div class="scenario-kpis">
+            <div><span>Invested</span><strong id="scenarioInvested">--</strong></div>
+            <div><span>Today</span><strong id="scenarioCurrent">--</strong></div>
+            <div><span>Gain/Loss</span><strong id="scenarioGain">--</strong></div>
+            <div><span>Total return</span><strong id="scenarioReturn">--</strong></div>
+            <div><span>Forecast range</span><strong id="scenarioForecast">--</strong></div>
+          </div>
+          <div class="scenario-body">
+            <div class="chart-shell scenario-chart-shell">
+              <canvas id="scenarioChart" width="900" height="280"></canvas>
+            </div>
+            <div class="table-wrap ranking-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Entry</th>
+                    <th>Shares</th>
+                    <th>Current</th>
+                    <th>Value</th>
+                    <th>Return</th>
+                    <th>CAGR</th>
+                  </tr>
+                </thead>
+                <tbody id="scenarioHoldingRows"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="custom-panel">
         <div>
           <p class="eyebrow">Custom universe</p>

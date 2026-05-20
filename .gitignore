@@ -8,3 +8,6 @@ __pycache__/
 .pytest_cache/
 pytest-cache-files-*/
 outputs/custom_preview/
+*.sqlite3
+*.sqlite3-journal
+data/write-test.txt

@@ -48,6 +48,27 @@ body {
   z-index: 5;
 }
 
+.header-actions,
+.auth-controls,
+.scenario-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.theme-toggle {
+  min-height: 39px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0 14px;
+  background: var(--ink);
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
 .eyebrow,
 .label {
   margin: 0 0 8px;
@@ -87,6 +108,140 @@ main {
   width: min(1480px, 100%);
   margin: 0 auto;
   padding: 24px clamp(18px, 4vw, 56px) 56px;
+}
+
+.auth-strip,
+.scenario-panel {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--small-shadow);
+}
+
+.auth-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.auth-controls input,
+.scenario-actions input,
+.scenario-actions select,
+.holding-row input,
+.holding-row select {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+}
+
+.auth-controls button,
+.scenario-actions button:not(.secondary-button) {
+  min-height: 42px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 16px;
+  background: var(--pine);
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.scenario-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.scenario-actions label,
+.holding-row label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.holding-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.holding-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.75fr) minmax(120px, 0.7fr) minmax(150px, 0.8fr) minmax(120px, 0.65fr) 42px;
+  gap: 10px;
+  align-items: end;
+}
+
+.holding-row button {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--red);
+  font: inherit;
+  font-weight: 950;
+  cursor: pointer;
+}
+
+.scenario-results {
+  margin-top: 18px;
+}
+
+.scenario-kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(130px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.scenario-kpis div {
+  min-height: 96px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--soft);
+}
+
+.scenario-kpis span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.scenario-kpis strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.1;
+}
+
+.scenario-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(460px, 0.85fr);
+  gap: 14px;
+}
+
+.scenario-chart-shell {
+  min-height: 300px;
+}
+
+#scenarioChart {
+  height: 280px;
 }
 
 .custom-panel {
@@ -743,18 +898,29 @@ th {
   .summary-band,
   .layout,
   .custom-panel,
-  .custom-controls {
+  .custom-controls,
+  .scenario-head,
+  .scenario-body {
     grid-template-columns: 1fr;
+  }
+
+  .scenario-head {
+    display: grid;
   }
 
   .summary-grid {
     grid-template-columns: repeat(3, minmax(120px, 1fr));
   }
+
+  .scenario-kpis {
+    grid-template-columns: repeat(3, minmax(130px, 1fr));
+  }
 }
 
 @media (max-width: 820px) {
   .app-header,
-  .panel-head {
+  .panel-head,
+  .auth-strip {
     flex-direction: column;
     align-items: stretch;
   }
@@ -762,7 +928,9 @@ th {
   .cards,
   .chart-readout,
   .week-glance,
-  ul {
+  ul,
+  .scenario-kpis,
+  .holding-row {
     grid-template-columns: 1fr;
   }
 
@@ -791,4 +959,50 @@ th {
   .summary-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.terminal-mode {
+  --bg: #08110f;
+  --bg-2: #0d1815;
+  --ink: #d9fff2;
+  --muted: #8bb0a4;
+  --soft: #0f1d19;
+  --panel: rgba(12, 24, 20, 0.94);
+  --line: rgba(139, 176, 164, 0.24);
+  --pine: #03100d;
+  --green: #45d48f;
+  --blue: #75a7ff;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  --small-shadow: 0 14px 34px rgba(0, 0, 0, 0.26);
+}
+
+.terminal-mode body,
+body.terminal-mode {
+  background: #08110f;
+}
+
+.terminal-mode .app-header,
+.terminal-mode .auth-strip,
+.terminal-mode .scenario-panel,
+.terminal-mode .custom-panel,
+.terminal-mode .panel,
+.terminal-mode .metric,
+.terminal-mode .chart-shell,
+.terminal-mode .stock-card,
+.terminal-mode li,
+.terminal-mode .week-glance > div,
+.terminal-mode .chart-readout div,
+.terminal-mode .scenario-kpis div {
+  background: var(--panel);
+}
+
+.terminal-mode input,
+.terminal-mode select,
+.terminal-mode .secondary-button,
+.terminal-mode .holding-row button,
+.terminal-mode .starter-row button,
+.terminal-mode .watchlist-chips button,
+.terminal-mode .downloads a {
+  background: #0f1d19;
+  color: var(--ink);
 }

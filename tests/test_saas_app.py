@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 
+import pandas as pd
 import pytest
+from pathlib import Path
 
 import src.saas_app as saas_app
 from src.saas_app import app
@@ -140,3 +142,54 @@ def test_email_endpoint_reports_missing_smtp(monkeypatch):
     )
 
     assert response.status_code == 503
+
+
+def test_auth_and_portfolio_save_round_trip(monkeypatch):
+    test_db = Path("pytest-cache-files-local/app.sqlite3")
+    test_db.parent.mkdir(exist_ok=True)
+    monkeypatch.setattr(saas_app, "DB_PATH", test_db)
+    saas_app.init_db()
+
+    auth = client.post(
+        "/api/auth/google",
+        json={"email": "analyst+test@example.com", "name": "Analyst"},
+    )
+    assert auth.status_code == 200
+    token = auth.json()["token"]
+
+    response = client.post(
+        "/api/portfolios",
+        headers={"Authorization": f"Bearer {token}"},
+        json={
+            "name": "Core test sleeve",
+            "holdings": [{"symbol": "MSFT", "allocation": 100, "purchaseDate": "2025-06-11"}],
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["holdings"][0]["symbol"] == "MSFT"
+
+    listed = client.get("/api/portfolios", headers={"Authorization": f"Bearer {token}"})
+    assert listed.status_code == 200
+    assert any(row["name"] == "Core test sleeve" for row in listed.json()["rows"])
+
+
+def test_scenario_calculates_historical_value(monkeypatch):
+    index = pd.to_datetime(["2025-06-11", "2025-06-13", "2025-06-20", "2025-06-27"])
+    closes = pd.DataFrame({"MSFT": [100.0, 105.0, 110.0, 120.0]}, index=index)
+    monkeypatch.setattr(saas_app, "download_adjusted_closes", lambda symbols, start, end=None: closes)
+
+    response = client.post(
+        "/api/scenarios",
+        json={
+            "name": "MSFT June scenario",
+            "holdings": [{"symbol": "MSFT", "allocation": 100, "purchaseDate": "2025-06-11"}],
+            "forecastHorizonWeeks": 4,
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["summary"]["invested"] == 100.0
+    assert payload["summary"]["currentValue"] == 120.0
+    assert payload["summary"]["totalReturn"] == "20.00%"
+    assert len(payload["forecast"]) == 4
