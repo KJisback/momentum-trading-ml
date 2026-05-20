@@ -524,7 +524,7 @@ def cron_weekly_email(token: str | None = None) -> dict:
     request = EmailAlertRequest(
         tickers=tickers,
         topN=int(os.getenv("DEFAULT_ALERT_TOP_N", "2")),
-        modelType=os.getenv("DEFAULT_ALERT_MODEL", "xgboost"),
+        modelType=os.getenv("DEFAULT_ALERT_MODEL", "hist_gradient_boosting"),
         portfolioDescription=os.getenv("DEFAULT_ALERT_DESCRIPTION", "Weekly momentum alert"),
     )
     return email_weekly_picks(request)

@@ -125,11 +125,11 @@ Custom watchlists:
 - Local/backend mode supports live yfinance runs from the dashboard.
 - GitHub Pages is static, so live runs call the deployed FastAPI backend configured in `web/config.js`.
 - If the backend is asleep or unavailable, the static page still shows the default precomputed dashboard.
-- The default backend target is `https://momentum-trading-ml-api.onrender.com`.
+- The default backend target is `https://momentum-trading-ml.koyeb.app`.
 
 ## Public Deployment
 
-The public dashboard is exported to `docs/` and deployed through GitHub Pages. The live yfinance API is deployed as a Render web service.
+The public dashboard is exported to `docs/` and deployed through GitHub Pages. The live yfinance API is designed for Koyeb.
 
 Refresh the static build before publishing:
 
@@ -137,18 +137,16 @@ Refresh the static build before publishing:
 py -3.11 export_static_site.py
 ```
 
-Render backend settings:
+Koyeb backend settings:
 
 ```text
-Service name: momentum-trading-ml-api
-Build command: pip install --upgrade pip && pip install -r requirements.txt
-Start command: uvicorn src.saas_app:app --host 0.0.0.0 --port $PORT
+Repository: KJisback/momentum-trading-ml
+Builder: Dockerfile
+Exposed port: 8000
 Health check: /api/health
 ```
 
-The same settings are captured in `render.yaml`.
-
-See `DEPLOYMENT.md` for the backend and frontend smoke-test checklist.
+See `KOYEB.md` and `DEPLOYMENT.md` for backend, frontend, and weekly-email setup.
 
 Expected public URL:
 
@@ -158,11 +156,11 @@ https://kjisback.github.io/momentum-trading-ml/
 
 Dashboard QOL features:
 
-- Interactive chart modes for equity, weekly returns, drawdown, and rolling risk
+- Interactive chart modes for equity, benchmark overlay, weekly returns, drawdown, and rolling risk
 - Full, 1-year, and 6-month chart ranges
 - Hover tooltip with week-level values
 - Plain-English performance readout
-- Latest picks, cost impact, current drawdown, and 4-week average return
+- Latest picks, industry, benchmark alpha, Sortino, beta, cost impact, current drawdown, and 4-week average return
 
 ## Validation Setup
 

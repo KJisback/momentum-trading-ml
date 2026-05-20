@@ -1,0 +1,19 @@
+name: Send weekly momentum email
+
+on:
+  schedule:
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+
+jobs:
+  weekly-email:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger backend email job
+        env:
+          MOMENTUM_API_BASE: ${{ secrets.MOMENTUM_API_BASE }}
+          MOMENTUM_CRON_SECRET: ${{ secrets.MOMENTUM_CRON_SECRET }}
+        run: |
+          test -n "$MOMENTUM_API_BASE"
+          test -n "$MOMENTUM_CRON_SECRET"
+          curl --fail-with-body "$MOMENTUM_API_BASE/api/cron/weekly-email?token=$MOMENTUM_CRON_SECRET"
