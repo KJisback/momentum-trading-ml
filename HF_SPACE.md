@@ -29,7 +29,7 @@ The Space repository README should start with:
 ```yaml
 ---
 title: Momentum Trading ML API
-emoji: 📈
+emoji: chart_with_upwards_trend
 colorFrom: green
 colorTo: blue
 sdk: docker
