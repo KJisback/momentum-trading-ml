@@ -125,11 +125,11 @@ Custom watchlists:
 - Local/backend mode supports live yfinance runs from the dashboard.
 - GitHub Pages is static, so live runs call the deployed FastAPI backend configured in `web/config.js`.
 - If the backend is asleep or unavailable, the static page still shows the default precomputed dashboard.
-- The default backend target is `https://momentum-trading-ml.koyeb.app`.
+- The default backend target is `https://kjisback-momentum-trading-ml.hf.space`.
 
 ## Public Deployment
 
-The public dashboard is exported to `docs/` and deployed through GitHub Pages. The live yfinance API is designed for Koyeb.
+The public dashboard is exported to `docs/` and deployed through GitHub Pages. The live yfinance API is designed for a Hugging Face Docker Space.
 
 Refresh the static build before publishing:
 
@@ -137,16 +137,15 @@ Refresh the static build before publishing:
 py -3.11 export_static_site.py
 ```
 
-Koyeb backend settings:
+Hugging Face Space backend settings:
 
 ```text
-Repository: KJisback/momentum-trading-ml
-Builder: Dockerfile
-Exposed port: 8000
+SDK: Docker
+App port: 7860
 Health check: /api/health
 ```
 
-See `KOYEB.md` and `DEPLOYMENT.md` for backend, frontend, and weekly-email setup.
+See `HF_SPACE.md` and `DEPLOYMENT.md` for backend, frontend, and weekly-email setup.
 
 Expected public URL:
 

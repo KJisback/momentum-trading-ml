@@ -1,21 +1,20 @@
 # Deployment Checklist
 
-## Backend on Koyeb
+## Backend on Hugging Face Spaces
 
-1. Create a Koyeb web service from this GitHub repository.
-2. Use the Dockerfile builder.
-3. Set the exposed port to `8000`.
-4. Set the health check path to `/api/health`.
-5. Add the environment variables listed in `KOYEB.md`.
-6. Deploy.
+1. Create a Hugging Face Space.
+2. Choose Docker as the SDK.
+3. Use port `7860`.
+4. Add the environment variables listed in `HF_SPACE.md`.
+5. Deploy the Docker Space.
 
 Expected health URL:
 
 ```text
-https://momentum-trading-ml.koyeb.app/api/health
+https://kjisback-momentum-trading-ml.hf.space/api/health
 ```
 
-If Koyeb gives a different app URL, update `web/config.js`, run `py -3.11 export_static_site.py`, then commit and push.
+If Hugging Face gives a different Space URL, update `web/config.js`, run `py -3.11 export_static_site.py`, then commit and push.
 
 ## Frontend on GitHub Pages
 
@@ -29,7 +28,7 @@ docs/config.js
 Current backend URL:
 
 ```text
-https://momentum-trading-ml.koyeb.app
+https://kjisback-momentum-trading-ml.hf.space
 ```
 
 ## Weekly Email
@@ -39,8 +38,8 @@ Weekly email is triggered by GitHub Actions, not platform cron.
 Set GitHub repository secrets:
 
 ```text
-MOMENTUM_API_BASE=https://momentum-trading-ml.koyeb.app
-MOMENTUM_CRON_SECRET=<same value as Koyeb CRON_SECRET>
+MOMENTUM_API_BASE=https://kjisback-momentum-trading-ml.hf.space
+MOMENTUM_CRON_SECRET=<same value as Space CRON_SECRET>
 ```
 
 The workflow is:

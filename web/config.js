@@ -1,1 +1,1 @@
-window.MOMENTUM_API_BASE = "https://momentum-trading-ml.koyeb.app";
+window.MOMENTUM_API_BASE = "https://kjisback-momentum-trading-ml.hf.space";
