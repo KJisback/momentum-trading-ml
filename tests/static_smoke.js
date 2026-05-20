@@ -65,7 +65,8 @@ const context = {
   },
   fetch: async (url) => ({
     ok: Boolean(fixtures[url]),
-    json: async () => fixtures[url],
+    headers: { get: () => "application/json" },
+    text: async () => JSON.stringify(fixtures[url]),
   }),
   setTimeout,
 };

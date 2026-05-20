@@ -37,8 +37,33 @@ const chartBook = {
 
 async function getJson(url) {
   const reply = await fetch(runningStatic ? apiFiles[url] : `${apiBase}${url}`);
-  if (!reply.ok) throw new Error(`Request failed: ${url}`);
-  return reply.json();
+  return readJsonResponse(reply, `Request failed: ${url}`);
+}
+
+async function readJsonResponse(reply, fallbackMessage) {
+  const contentType = reply.headers?.get?.("content-type") || "";
+  const text = await reply.text();
+  let data = null;
+
+  if (text && contentType.includes("application/json")) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("Backend returned malformed JSON. Please check the deployment logs.");
+    }
+  }
+
+  if (!reply.ok) {
+    const detail = data?.detail || text.replace(/\s+/g, " ").trim();
+    throw new Error(detail || fallbackMessage);
+  }
+
+  if (!data) {
+    const preview = text.replace(/\s+/g, " ").trim().slice(0, 140);
+    throw new Error(preview ? `Backend did not return JSON: ${preview}` : "Backend returned an empty response.");
+  }
+
+  return data;
 }
 
 function setDownloadLinks() {
@@ -139,8 +164,7 @@ async function runCustomUniverse() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(page.lastRequest),
     });
-    const data = await reply.json();
-    if (!reply.ok) throw new Error(data.detail || "Custom run failed.");
+    const data = await readJsonResponse(reply, "Custom run failed.");
     page.chartRows = data.equity.series;
     page.hover = null;
     fillSummary(data.summary);
@@ -165,8 +189,7 @@ async function emailWeeklyPicks() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(page.lastRequest),
     });
-    const data = await reply.json();
-    if (!reply.ok) throw new Error(data.detail || "Email failed.");
+    const data = await readJsonResponse(reply, "Email failed.");
     setCustomNote(`Email sent to ${data.recipients.join(", ")}`, "ready");
   } catch (error) {
     setCustomNote(error.message, "error");
